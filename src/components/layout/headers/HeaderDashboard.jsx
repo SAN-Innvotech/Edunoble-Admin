@@ -110,16 +110,16 @@ export default function HeaderDashboard() {
                   </button>
                 </div>
 
-                <div className="header__logo ml-30 md:ml-20">
+                <div className="header__logo ml-30 md:ml-20" style={{ width: "160px" }}>
                   <Link data-barba to="/">
                     <img
                       className="-light-d-none"
-                      src="/assets/img/general/logo.svg"
+                      src="/assets/img/general/logo1.jpeg"
                       alt="logo"
                     />
                     <img
                       className="-dark-d-none"
-                      src="/assets/img/general/logo-dark.svg"
+                      src="/assets/img/general/logo1.jpeg"
                       alt="logo"
                     />
                   </Link>

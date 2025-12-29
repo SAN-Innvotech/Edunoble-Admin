@@ -8,9 +8,9 @@ export default function HeaderAuth() {
         <div className="row justify-between items-center">
           <div className="col-auto">
             <div className="header-left">
-              <div className="header__logo ">
+              <div className="header__logo " style={{ width: "140px" }}>
                 <Link data-barba to="/">
-                  <img src="/assets/img/general/logo.svg" alt="logo" />
+                  <img src="/assets/img/general/logo2.png" alt="logo" />
                 </Link>
               </div>
             </div>
