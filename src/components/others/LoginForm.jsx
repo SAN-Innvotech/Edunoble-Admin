@@ -49,8 +49,8 @@ export default function LoginForm() {
       // Save auth data to global state
       if (result.data) {
         setAuthData(result.data);
-        // Redirect to dashboard
-        navigate("/dashboard");
+        // Redirect to papers dashboard
+        navigate("/dshb-papers");
       } else {
         throw new Error("Invalid response from server");
       }

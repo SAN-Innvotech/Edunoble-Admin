@@ -8,6 +8,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import Context from "@/context/Context";
+import ProtectedRoute from "@/components/common/ProtectedRoute";
 import HomePage1 from "./pages";
 import HomePage2 from "./pages/homes/home-2";
 import HomePage3 from "./pages/homes/home-3";
@@ -44,6 +45,8 @@ import DshbCoursesPage from "./pages/dashboard/dshb-courses";
 import DshbBookmarksPage from "./pages/dashboard/dshb-bookmarks";
 import DshbListingPage from "./pages/dashboard/dshb-listing";
 import DshbReviewsPage from "./pages/dashboard/dshb-reviews";
+import DshbTestimonialsPage from "./pages/dashboard/dshb-testimonials";
+import DshbQueriesPage from "./pages/dashboard/dshb-queries";
 import DshbSettingsPage from "./pages/dashboard/dshb-settings";
 import DshbAdministrationPage from "./pages/dashboard/dshb-administration";
 import DshbAssignmentPage from "./pages/dashboard/dshb-assignment";
@@ -99,9 +102,9 @@ function App() {
     <>
       <Context>
         <BrowserRouter>
-          <Routes>
-            <Route path="/">
-              <Route index element={<HomePage1 />} />
+            <Routes>
+              <Route path="/">
+                <Route index element={<LoginPage />} />
               {/* <Route path="home-1" element={<HomePage1 />} /> */}
               {/* <Route path="home-2" element={<HomePage2 />} /> */}
               {/* <Route path="home-3" element={<HomePage3 />} /> */}
@@ -115,7 +118,7 @@ function App() {
 
               {/* <Route path="courses-list-1" element={<CourseListPage1 />} /> */}
               {/* <Route path="courses-list-2" element={<CourseListPage2 />} /> */}
-              <Route path="papers" element={<CourseListPage3 />} />
+              {/* <Route path="papers" element={<CourseListPage3 />} /> */}
               {/* <Route path="courses-list-4" element={<CourseListPage4 />} /> */}
               {/* <Route path="courses-list-5" element={<CourseListPage5 />} /> */}
               {/* <Route path="courses-list-6" element={<CourseListPage6 />} /> */}
@@ -170,11 +173,34 @@ function App() {
                 element={<InstractoBacomePage />}
               /> */}
 
-              <Route path="dashboard" element={<DashboardPage />} />
-              <Route path="dshb-courses" element={<DshbCoursesPage />} />
+              {/* <Route path="dashboard" element={<DashboardPage />} /> */}
+              <Route
+                path="dshb-papers"
+                element={
+                  <ProtectedRoute>
+                    <DshbCoursesPage />
+                  </ProtectedRoute>
+                }
+              />
               {/* <Route path="dshb-bookmarks" element={<DshbBookmarksPage />} /> */}
-              <Route path="dshb-listing" element={<DshbListingPage />} />
-              <Route path="dshb-reviews" element={<DshbReviewsPage />} />
+              {/* <Route path="dshb-listing" element={<DshbListingPage />} /> */}
+              {/* <Route path="dshb-reviews" element={<DshbReviewsPage />} /> */}
+              <Route
+                path="dshb-testimonials"
+                element={
+                  <ProtectedRoute>
+                    <DshbTestimonialsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="dshb-queries"
+                element={
+                  <ProtectedRoute>
+                    <DshbQueriesPage />
+                  </ProtectedRoute>
+                }
+              />
               {/* <Route path="dshb-settings" element={<DshbSettingsPage />} /> */}
               {/* <Route
                 path="dshb-administration"
@@ -208,7 +234,7 @@ function App() {
               {/* <Route path="about-1" element={<AboutPage1 />} /> */}
               {/* <Route path="about-2" element={<AboutPage2 />} /> */}
 
-              <Route path="contact-1" element={<ContactPage1 />} />
+              {/* <Route path="contact-1" element={<ContactPage1 />} /> */}
               {/* <Route path="contact-2" element={<ContactPage2 />} /> */}
 
               {/* <Route path="shop-cart" element={<ShopCartPage />} /> */}
@@ -224,7 +250,7 @@ function App() {
               {/* <Route path="help-center" element={<HelpCenterPage />} /> */}
               <Route path="login" element={<LoginPage />} />
               {/* <Route path="signup" element={<SignupPage />} /> */}
-              <Route path="ui-elements" element={<UIElementsPage />} />
+              {/* <Route path="ui-elements" element={<UIElementsPage />} /> */}
             </Route>
           </Routes>
           <ScrollTopBehaviour />
