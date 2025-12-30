@@ -20,9 +20,9 @@ export default function NotFoundPage() {
 
       <Preloader />
 
-      <Header />
+      {/* <Header /> */}
       <div className="content-wrapper js-content-wrapper overflow-hidden">
-        <PageLinks />
+        {/* <PageLinks /> */}
         <NotFound />
         <FooterOne />
       </div>

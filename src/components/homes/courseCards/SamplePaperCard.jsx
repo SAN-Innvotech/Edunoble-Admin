@@ -40,8 +40,61 @@ export default function SamplePaperCard({ paper, onEdit }) {
             </div>
 
             <div className="h-100 pt-15">
-              <div className="text-15 lh-1 text-dark-1 mb-5">
-                Class {paper.class} • {paper.subject}
+              <div className="text-15 lh-1 text-dark-1 mb-5 d-flex items-center">
+                <span>
+                  Class {paper.class} • {paper.subject}
+                </span>
+                <span className="ml-10">
+                  {paper.isActive !== false ? (
+                    <span
+                      className="d-flex items-center px-8 py-3 rounded-200"
+                      style={{
+                        backgroundColor: "#d1fae5",
+                        color: "#065f46",
+                        fontSize: "9px",
+                        fontWeight: "500",
+                        gap: "4px",
+                        whiteSpace: "nowrap",
+                        display: "inline-flex",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: "6px",
+                          height: "6px",
+                          borderRadius: "50%",
+                          backgroundColor: "#10b981",
+                          display: "inline-block",
+                        }}
+                      ></span>
+                      Active
+                    </span>
+                  ) : (
+                    <span
+                      className="d-flex items-center px-8 py-3 rounded-200"
+                      style={{
+                        backgroundColor: "#fee2e2",
+                        color: "#991b1b",
+                        fontSize: "9px",
+                        fontWeight: "500",
+                        gap: "4px",
+                        whiteSpace: "nowrap",
+                        display: "inline-flex",
+                      }}
+                    >
+                      <span
+                        style={{
+                          width: "6px",
+                          height: "6px",
+                          borderRadius: "50%",
+                          backgroundColor: "#ef4444",
+                          display: "inline-block",
+                        }}
+                      ></span>
+                      Inactive
+                    </span>
+                  )}
+                </span>
               </div>
 
               <div className="text-17 lh-15 fw-500 text-dark-1 mt-5">
@@ -114,7 +167,7 @@ export default function SamplePaperCard({ paper, onEdit }) {
                       onEdit(paper);
                     }
                   }}
-                  className="button -sm -outline-purple-1 text-purple-1 d-flex items-center justify-center"
+                  className="button -sm -dark-1 text-purple-1 d-flex items-center justify-center"
                   style={{
                     border: "1px solid #6366f1",
                     background: "transparent",

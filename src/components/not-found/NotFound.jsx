@@ -24,7 +24,7 @@ export default function NotFound() {
                 The page you're looking for doesn't exist. Don't worry! 
                 <br /> Browse our sample papers for Class 10, 11, and 12 or return to the homepage.
               </div>
-              <Link to="/" className="button -md -purple-1 text-white mt-20">
+              <Link to="/dshb-papers" className="button -md -purple-1 text-white mt-20">
                 Go Back To Homepage
               </Link>
             </div>

@@ -589,18 +589,32 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
               )}
             </div>
 
-            {/* Featured */}
+            {/* Featured and Is Active */}
             <div className="col-12">
-              <label className="d-flex items-center cursor">
-                <input
-                  type="checkbox"
-                  name="featured"
-                  checked={formData.featured}
-                  onChange={handleChange}
-                  className="mr-10"
-                />
-                <span className="text-14">Featured</span>
-              </label>
+              <div className="d-flex items-center x-gap-20">
+                <label className="d-flex items-center cursor">
+                  <input
+                    type="checkbox"
+                    name="featured"
+                    checked={formData.featured}
+                    onChange={handleChange}
+                    className="mr-10"
+                  />
+                  <span className="text-14">Featured</span>
+                </label>
+                {isEditMode && (
+                  <label className="d-flex items-center cursor">
+                    <input
+                      type="checkbox"
+                      name="isActive"
+                      checked={formData.isActive}
+                      onChange={handleChange}
+                      className="mr-10"
+                    />
+                    <span className="text-14">Is Active</span>
+                  </label>
+                )}
+              </div>
             </div>
 
             {/* Submit Buttons */}

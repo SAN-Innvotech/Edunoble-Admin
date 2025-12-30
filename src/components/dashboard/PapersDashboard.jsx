@@ -4,8 +4,10 @@ import PaginationTwo from "../common/PaginationTwo";
 import PaperFormModal from "./PaperFormModal";
 import { getApiUrl } from "@/config/api";
 import { samplePaperSortingOptions } from "@/data/courses";
+import { useContextElement } from "@/context/Context";
 
 export default function PapersDashboard() {
+  const { auth } = useContextElement();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [currentSortingOption, setCurrentSortingOption] = useState("Default");
@@ -125,7 +127,19 @@ export default function PapersDashboard() {
         params.append("search", searchTerm.trim());
       }
 
-      const response = await fetch(`${getApiUrl("papers")}?${params.toString()}`);
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      // Add authorization token if available
+      if (auth && auth.token) {
+        headers["Authorization"] = `Bearer ${auth.token}`;
+      }
+
+      const response = await fetch(`${getApiUrl("papers/admin/list")}?${params.toString()}`, {
+        method: "GET",
+        headers,
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to fetch papers: ${response.status}`);
@@ -158,6 +172,7 @@ export default function PapersDashboard() {
     getSortByValue,
     limit,
     searchTerm,
+    auth,
   ]);
 
   // Fetch papers when filters, pagination, or sorting changes

@@ -4,10 +4,18 @@ import { sidebarItems } from "../../../data/homeSidebarItems";
 import { notifications } from "@/data/notifications";
 import Messages from "../component/Messages";
 import MyCourses from "../component/MyCourses";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContextElement } from "@/context/Context";
 
 export default function HeaderDashboard() {
+  const navigate = useNavigate();
+  const { logout } = useContextElement();
   const [messageOpen, setMessageOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -102,16 +110,16 @@ export default function HeaderDashboard() {
                   </button>
                 </div>
 
-                <div className="header__logo ml-30 md:ml-20">
+                <div className="header__logo ml-30 md:ml-20" style={{ width: "160px" }}>
                   <Link data-barba to="/">
                     <img
                       className="-light-d-none"
-                      src="/assets/img/general/logo.svg"
+                      src="/assets/img/general/logo1.jpeg"
                       alt="logo"
                     />
                     <img
                       className="-dark-d-none"
-                      src="/assets/img/general/logo-dark.svg"
+                      src="/assets/img/general/logo1.jpeg"
                       alt="logo"
                     />
                   </Link>
@@ -121,7 +129,7 @@ export default function HeaderDashboard() {
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <div className="text-white d-flex items-center lg:d-none mr-15">
+                {/* <div className="text-white d-flex items-center lg:d-none mr-15">
                   <div className="dropdown bg-transparent px-0 py-0">
                     <div className="d-flex items-center text-14 text-dark-1">
                       All Pages
@@ -267,7 +275,7 @@ export default function HeaderDashboard() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 <div
                   className="relative d-flex items-center ml-10"
@@ -287,24 +295,25 @@ export default function HeaderDashboard() {
                     } -`}
                   >
                     <div className="toggle-bottom -profile bg-white shadow-4 border-light rounded-8 mt-10">
-                      <div className="px-30 py-30">
+                      <div className="px-5 py-5">
                         <div className="sidebar -dashboard">
-                          {sidebarItems.map((elm, i) => (
-                            <div
-                              key={i}
-                              className={`sidebar__item ${
-                                elm.id == 1 ? "-is-active -dark-bg-dark-2" : ""
-                              }`}
+                          <div className="sidebar__item">
+                            <button
+                              onClick={handleLogout}
+                              className="d-flex items-center text-17 lh-1 fw-500 w-1/1"
+                              style={{
+                                background: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                padding: "0",
+                                textAlign: "left",
+                                color: "inherit",
+                              }}
                             >
-                              <a
-                                href={elm.href}
-                                className="d-flex items-center text-17 lh-1 fw-500 "
-                              >
-                                <i className={elm.iconClass}></i>
-                                {elm.text}
-                              </a>
-                            </div>
-                          ))}
+                              <i className="text-20 icon-power mr-15"></i>
+                              Logout
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
