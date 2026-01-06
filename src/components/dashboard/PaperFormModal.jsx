@@ -4,6 +4,37 @@ import { useContextElement } from "@/context/Context";
 import { createPortal } from "react-dom";
 import Toast from "../common/Toast";
 
+// Predefined options for dropdowns
+const CLASS_OPTIONS = ["8", "9", "10", "11", "12"];
+const SUBJECT_OPTIONS = [
+  "Mathematics",
+  "Physics",
+  "Chemistry",
+  "Biology",
+  "English",
+  "Computer Science",
+  "History",
+  "Geography",
+  "Economics",
+  "Accountancy",
+  "Hindi",
+  "Sanskrit",
+  "Social Science",
+  "Economics",
+  "Accountancy",
+];
+const BOARD_OPTIONS = ["CBSE", "ICSE", "ISC", "State Board", "IB", "IGCSE"];
+const EXAM_TYPE_OPTIONS = [
+  "Sample Paper",
+  "Pre-board",
+  "Board Exam",
+  "Unit Test",
+  "Class Test",
+  "Mock Test",
+  "Mid-term",
+  "Final",
+];
+
 export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
   const { auth } = useContextElement();
   const [toast, setToast] = useState({
@@ -14,11 +45,15 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
   const [formData, setFormData] = useState({
     title: "",
     class: "",
+    classOther: "",
     subject: "",
+    subjectOther: "",
     year: new Date().getFullYear(),
     description: "",
     board: "",
+    boardOther: "",
     examType: "",
+    examTypeOther: "",
     tags: [],
     fileUrl: "",
     featured: false,
@@ -29,51 +64,30 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Metadata for dropdowns
-  const [metadata, setMetadata] = useState({
-    classes: [],
-    subjects: [],
-    boards: [],
-    years: [],
-    examTypes: [],
-  });
-
   const isEditMode = !!paper;
 
-  // Fetch metadata on mount
+  // Initialize form when modal opens
   useEffect(() => {
-    const fetchMetadata = async () => {
-      try {
-        const response = await fetch(getApiUrl("papers/metadata"));
-        if (response.ok) {
-          const result = await response.json();
-          if (result.isSuccess && result.data) {
-            setMetadata({
-              classes: result.data.classes || [],
-              subjects: result.data.subjects || [],
-              boards: result.data.boards || [],
-              years: result.data.years || [],
-              examTypes: result.data.examTypes || [],
-            });
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching metadata:", err);
-      }
-    };
-
     if (isOpen) {
-      fetchMetadata();
       if (paper) {
         // Populate form with existing paper data
+        const paperClassInOptions = CLASS_OPTIONS.includes(paper.class);
+        const paperSubjectInOptions = SUBJECT_OPTIONS.includes(paper.subject);
+        const paperBoardInOptions = BOARD_OPTIONS.includes(paper.board);
+        const paperExamTypeInOptions = EXAM_TYPE_OPTIONS.includes(paper.examType);
+
         setFormData({
           title: paper.title || "",
-          class: paper.class || "",
-          subject: paper.subject || "",
+          class: paperClassInOptions ? paper.class || "" : "Other",
+          classOther: paperClassInOptions ? "" : paper.class || "",
+          subject: paperSubjectInOptions ? paper.subject || "" : "Other",
+          subjectOther: paperSubjectInOptions ? "" : paper.subject || "",
           year: paper.year || new Date().getFullYear(),
           description: paper.description || "",
-          board: paper.board || "",
-          examType: paper.examType || "",
+          board: paperBoardInOptions ? paper.board || "" : "Other",
+          boardOther: paperBoardInOptions ? "" : paper.board || "",
+          examType: paperExamTypeInOptions ? paper.examType || "" : "Other",
+          examTypeOther: paperExamTypeInOptions ? "" : paper.examType || "",
           tags: paper.tags || [],
           fileUrl: paper.fileUrl || "",
           featured: paper.featured || false,
@@ -84,11 +98,15 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
         setFormData({
           title: "",
           class: "",
+          classOther: "",
           subject: "",
+          subjectOther: "",
           year: new Date().getFullYear(),
           description: "",
           board: "",
+          boardOther: "",
           examType: "",
+          examTypeOther: "",
           tags: [],
           fileUrl: "",
           featured: false,
@@ -132,8 +150,20 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
     setError(null);
 
     try {
+      const finalClass = formData.class === "Other" ? formData.classOther.trim() : formData.class;
+      const finalSubject =
+        formData.subject === "Other" ? formData.subjectOther.trim() : formData.subject;
+      const finalBoard = formData.board === "Other" ? formData.boardOther.trim() : formData.board;
+      const finalExamType =
+        formData.examType === "Other" ? formData.examTypeOther.trim() : formData.examType;
+
       // Validate required fields
-      if (!formData.title || !formData.class || !formData.subject || !formData.fileUrl) {
+      if (
+        !formData.title ||
+        !finalClass ||
+        !finalSubject ||
+        !formData.fileUrl
+      ) {
         throw new Error("Please fill in all required fields");
       }
 
@@ -157,12 +187,12 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
         headers,
         body: JSON.stringify({
           title: formData.title,
-          class: formData.class,
-          subject: formData.subject,
+          class: finalClass,
+          subject: finalSubject,
           year: parseInt(formData.year),
           description: formData.description,
-          board: formData.board,
-          examType: formData.examType,
+          board: finalBoard,
+          examType: finalExamType,
           tags: formData.tags,
           fileUrl: formData.fileUrl,
           featured: formData.featured,
@@ -356,12 +386,31 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 }}
               >
                 <option value="">Select Class</option>
-                {metadata.classes.map((cls) => (
-                  <option key={cls.name} value={cls.name}>
-                    Class {cls.name}
+                {CLASS_OPTIONS.map((cls) => (
+                  <option key={cls} value={cls}>
+                    Class {cls}
                   </option>
                 ))}
+                <option value="Other">Other</option>
               </select>
+              {formData.class === "Other" && (
+                <input
+                  type="text"
+                  name="classOther"
+                  value={formData.classOther}
+                  onChange={handleChange}
+                  placeholder="Enter class"
+                  className="mt-10"
+                  style={{
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #DDDDDD",
+                    borderRadius: "8px",
+                    padding: "15px 22px",
+                    fontSize: "15px",
+                    width: "100%",
+                  }}
+                />
+              )}
             </div>
 
             <div className="col-lg-6">
@@ -388,12 +437,31 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 }}
               >
                 <option value="">Select Subject</option>
-                {metadata.subjects.map((subj) => (
-                  <option key={subj.name} value={subj.name}>
-                    {subj.name}
+                {SUBJECT_OPTIONS.map((subj) => (
+                  <option key={subj} value={subj}>
+                    {subj}
                   </option>
                 ))}
+                <option value="Other">Other</option>
               </select>
+              {formData.subject === "Other" && (
+                <input
+                  type="text"
+                  name="subjectOther"
+                  value={formData.subjectOther}
+                  onChange={handleChange}
+                  placeholder="Enter subject"
+                  className="mt-10"
+                  style={{
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #DDDDDD",
+                    borderRadius: "8px",
+                    padding: "15px 22px",
+                    fontSize: "15px",
+                    width: "100%",
+                  }}
+                />
+              )}
             </div>
 
             {/* Year, Board, Exam Type */}
@@ -444,12 +512,31 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 }}
               >
                 <option value="">Select Board</option>
-                {metadata.boards.map((board) => (
-                  <option key={board.name} value={board.name}>
-                    {board.name}
+                {BOARD_OPTIONS.map((board) => (
+                  <option key={board} value={board}>
+                    {board}
                   </option>
                 ))}
+                <option value="Other">Other</option>
               </select>
+              {formData.board === "Other" && (
+                <input
+                  type="text"
+                  name="boardOther"
+                  value={formData.boardOther}
+                  onChange={handleChange}
+                  placeholder="Enter board"
+                  className="mt-10"
+                  style={{
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #DDDDDD",
+                    borderRadius: "8px",
+                    padding: "15px 22px",
+                    fontSize: "15px",
+                    width: "100%",
+                  }}
+                />
+              )}
             </div>
 
             <div className="col-lg-4">
@@ -475,12 +562,31 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 }}
               >
                 <option value="">Select Exam Type</option>
-                {metadata.examTypes.map((type) => (
-                  <option key={type.name} value={type.name}>
-                    {type.name}
+                {EXAM_TYPE_OPTIONS.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
                   </option>
                 ))}
+                <option value="Other">Other</option>
               </select>
+              {formData.examType === "Other" && (
+                <input
+                  type="text"
+                  name="examTypeOther"
+                  value={formData.examTypeOther}
+                  onChange={handleChange}
+                  placeholder="Enter exam type"
+                  className="mt-10"
+                  style={{
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #DDDDDD",
+                    borderRadius: "8px",
+                    padding: "15px 22px",
+                    fontSize: "15px",
+                    width: "100%",
+                  }}
+                />
+              )}
             </div>
 
             {/* Description */}
