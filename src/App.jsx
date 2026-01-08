@@ -9,6 +9,7 @@ import "aos/dist/aos.css";
 import { useEffect } from "react";
 import Context from "@/context/Context";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
+import HomeRedirect from "@/components/common/HomeRedirect";
 import HomePage1 from "./pages";
 import HomePage2 from "./pages/homes/home-2";
 import HomePage3 from "./pages/homes/home-3";
@@ -104,7 +105,7 @@ function App() {
         <BrowserRouter>
             <Routes>
               <Route path="/">
-                <Route index element={<LoginPage />} />
+                <Route index element={<HomeRedirect />} />
               {/* <Route path="home-1" element={<HomePage1 />} /> */}
               {/* <Route path="home-2" element={<HomePage2 />} /> */}
               {/* <Route path="home-3" element={<HomePage3 />} /> */}

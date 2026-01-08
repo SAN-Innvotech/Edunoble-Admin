@@ -253,7 +253,7 @@ export default function PapersDashboard() {
           <div className="col-auto">
             <h1 className="text-30 lh-12 fw-700">Sample Papers</h1>
             <div className="mt-10">
-              Browse and practice with free sample papers for Class 10, 11, and 12
+              Browse and practice with free sample papers for Class 8, 9, 10, 11, and 12
               students.
             </div>
           </div>
