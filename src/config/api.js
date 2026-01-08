@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = "http://localhost:8001/apis";
+export const API_BASE_URL = "https://edunoble-backend.vercel.app/apis";
 
 // Helper function to build full API endpoint URLs
 export const getApiUrl = (endpoint) => {

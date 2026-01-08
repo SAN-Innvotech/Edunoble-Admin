@@ -23,7 +23,7 @@ const masthead_info = [
 
 const hero_content = {
   title: "Practice Sample Papers for",
-  text_underline: "Class 10, 11 & 12",
+  text_underline: "Class 8, 9, 10, 11 & 12",
   info_hero: (
     <>
       Access high‑quality sample papers for Class 10, 11 and 12 in a secure

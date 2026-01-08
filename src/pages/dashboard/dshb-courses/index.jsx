@@ -8,9 +8,9 @@ import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
   title:
-    "Sample Papers for Class 10, 11 & 12 | Edunoble - Free Practice Papers",
+    "Sample Papers for Class 8, 9, 10, 11 & 12 | Edunoble - Free Practice Papers",
   description:
-    "Browse and practice with free sample papers for Class 10, 11, and 12 students. CBSE, ICSE, and State Board sample papers available in secure online viewing environment.",
+    "Browse and practice with free sample papers for Class 8, 9, 10, 11, and 12 students. CBSE, ICSE, and State Board sample papers available in secure online viewing environment.",
 };
 
 export default function DshbCoursesPage() {
