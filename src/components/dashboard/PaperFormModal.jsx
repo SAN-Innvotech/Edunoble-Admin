@@ -21,7 +21,6 @@ const SUBJECT_OPTIONS = [
   "Sanskrit",
   "Social Science",
   "Economics",
-  "Accountancy",
 ];
 const BOARD_OPTIONS = ["CBSE", "ICSE", "ISC", "State Board", "IB", "IGCSE"];
 const EXAM_TYPE_OPTIONS = [
@@ -63,8 +62,27 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
   const [tagInput, setTagInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const isEditMode = !!paper;
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains("-dark-mode"));
+    };
+    
+    checkDarkMode();
+    
+    // Watch for dark mode changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    
+    return () => observer.disconnect();
+  }, []);
 
   // Initialize form when modal opens
   useEffect(() => {
@@ -274,9 +292,10 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
       }}
     >
       <div
+        className="paper-form-modal-container"
         style={{
           position: "relative",
-          backgroundColor: "#ffffff",
+          backgroundColor: isDarkMode ? "#140342" : "#ffffff",
           borderRadius: "16px",
           maxWidth: "800px",
           width: "100%",
@@ -295,13 +314,13 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
           }}
         >
           <div
-            className="close cursor"
+            className="close cursor paper-form-modal-close"
             onClick={onClose}
             style={{
               position: "absolute",
               top: "15px",
               right: "25px",
-              color: "#333",
+              color: isDarkMode ? "#ffffff" : "#333",
               fontSize: "35px",
               fontWeight: "bold",
               zIndex: 10001,
@@ -325,9 +344,13 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
               .paper-form-modal select {
                 cursor: pointer;
               }
+              .paper-form-modal input::placeholder,
+              .paper-form-modal textarea::placeholder {
+                color: ${isDarkMode ? "rgba(255, 255, 255, 0.5)" : "#999"} !important;
+              }
             `}
           </style>
-          <h2 className="text-24 lh-1 fw-700 mb-30">
+          <h2 className={`text-24 lh-1 fw-700 mb-30 ${isDarkMode ? "text-white" : "text-dark-1"}`}>
             {isEditMode ? "Edit Paper" : "Add New Paper"}
           </h2>
 
@@ -340,7 +363,7 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
           <form onSubmit={handleSubmit} className="contact-form row y-gap-30 paper-form-modal">
             {/* Title */}
             <div className="col-12">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Title <span className="text-red-1">*</span>
               </label>
               <input
@@ -351,19 +374,20 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 onChange={handleChange}
                 placeholder="Enter paper title"
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               />
             </div>
 
             {/* Class and Subject */}
             <div className="col-lg-6">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Class <span className="text-red-1">*</span>
               </label>
               <select
@@ -372,17 +396,18 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 value={formData.class}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
                   appearance: "none",
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='${isDarkMode ? "white" : "%23333"}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "right 15px center",
                   paddingRight: "45px",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               >
                 <option value="">Select Class</option>
@@ -402,19 +427,20 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                   placeholder="Enter class"
                   className="mt-10"
                   style={{
-                    backgroundColor: "#ffffff",
-                    border: "1px solid #DDDDDD",
+                    backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                    border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                     borderRadius: "8px",
                     padding: "15px 22px",
                     fontSize: "15px",
                     width: "100%",
+                    color: isDarkMode ? "#ffffff" : "#000000",
                   }}
                 />
               )}
             </div>
 
             <div className="col-lg-6">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Subject <span className="text-red-1">*</span>
               </label>
               <select
@@ -423,17 +449,18 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 value={formData.subject}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
                   appearance: "none",
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='${isDarkMode ? "white" : "%23333"}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "right 15px center",
                   paddingRight: "45px",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               >
                 <option value="">Select Subject</option>
@@ -453,12 +480,13 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                   placeholder="Enter subject"
                   className="mt-10"
                   style={{
-                    backgroundColor: "#ffffff",
-                    border: "1px solid #DDDDDD",
+                    backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                    border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                     borderRadius: "8px",
                     padding: "15px 22px",
                     fontSize: "15px",
                     width: "100%",
+                    color: isDarkMode ? "#ffffff" : "#000000",
                   }}
                 />
               )}
@@ -466,7 +494,7 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
 
             {/* Year, Board, Exam Type */}
             <div className="col-lg-4">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Year <span className="text-red-1">*</span>
               </label>
               <input
@@ -479,18 +507,19 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 min="2000"
                 max="2100"
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               />
             </div>
 
             <div className="col-lg-4">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Board
               </label>
               <select
@@ -498,17 +527,18 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 value={formData.board}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
                   appearance: "none",
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='${isDarkMode ? "white" : "%23333"}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "right 15px center",
                   paddingRight: "45px",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               >
                 <option value="">Select Board</option>
@@ -528,19 +558,20 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                   placeholder="Enter board"
                   className="mt-10"
                   style={{
-                    backgroundColor: "#ffffff",
-                    border: "1px solid #DDDDDD",
+                    backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                    border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                     borderRadius: "8px",
                     padding: "15px 22px",
                     fontSize: "15px",
                     width: "100%",
+                    color: isDarkMode ? "#ffffff" : "#000000",
                   }}
                 />
               )}
             </div>
 
             <div className="col-lg-4">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Exam Type
               </label>
               <select
@@ -548,17 +579,18 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 value={formData.examType}
                 onChange={handleChange}
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
                   appearance: "none",
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='${isDarkMode ? "white" : "%23333"}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "right 15px center",
                   paddingRight: "45px",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               >
                 <option value="">Select Exam Type</option>
@@ -578,12 +610,13 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                   placeholder="Enter exam type"
                   className="mt-10"
                   style={{
-                    backgroundColor: "#ffffff",
-                    border: "1px solid #DDDDDD",
+                    backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                    border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                     borderRadius: "8px",
                     padding: "15px 22px",
                     fontSize: "15px",
                     width: "100%",
+                    color: isDarkMode ? "#ffffff" : "#000000",
                   }}
                 />
               )}
@@ -591,7 +624,7 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
 
             {/* Description */}
             <div className="col-12">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Description
               </label>
               <textarea
@@ -601,21 +634,22 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 placeholder="Enter paper description"
                 rows="3"
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
                   resize: "vertical",
                   fontFamily: "inherit",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               />
             </div>
 
             {/* File URL */}
             <div className="col-12">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 File URL <span className="text-red-1">*</span>
               </label>
               <input
@@ -626,19 +660,20 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                 onChange={handleChange}
                 placeholder="https://example.com/file.pdf"
                 style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #DDDDDD",
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                   borderRadius: "8px",
                   padding: "15px 22px",
                   fontSize: "15px",
                   width: "100%",
+                  color: isDarkMode ? "#ffffff" : "#000000",
                 }}
               />
             </div>
 
             {/* Tags */}
             <div className="col-12">
-              <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+              <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Tags
               </label>
               <div className="d-flex y-gap-10 mb-10">
@@ -654,12 +689,13 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                   }}
                   placeholder="Enter tag and press Enter"
                   style={{
-                    backgroundColor: "#ffffff",
-                    border: "1px solid #DDDDDD",
+                    backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                    border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                     borderRadius: "8px",
                     padding: "15px 22px",
                     fontSize: "15px",
                     flex: 1,
+                    color: isDarkMode ? "#ffffff" : "#000000",
                   }}
                 />
                 <button
@@ -706,7 +742,7 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                     onChange={handleChange}
                     className="mr-10"
                   />
-                  <span className="text-14">Featured</span>
+                  <span className={`text-14 ${isDarkMode ? "text-white" : ""}`}>Featured</span>
                 </label>
                 {isEditMode && (
                   <label className="d-flex items-center cursor">
@@ -717,7 +753,7 @@ export default function PaperFormModal({ isOpen, onClose, paper, onSuccess }) {
                       onChange={handleChange}
                       className="mr-10"
                     />
-                    <span className="text-14">Is Active</span>
+                    <span className={`text-14 ${isDarkMode ? "text-white" : ""}`}>Is Active</span>
                   </label>
                 )}
               </div>

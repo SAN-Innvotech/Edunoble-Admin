@@ -23,8 +23,27 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const isEditMode = !!testimonial;
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains("-dark-mode"));
+    };
+    
+    checkDarkMode();
+    
+    // Watch for dark mode changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    
+    return () => observer.disconnect();
+  }, []);
 
   // Populate form when modal opens or testimonial changes
   useEffect(() => {
@@ -185,24 +204,25 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
           }}
         >
           <div
-            className="rounded-16 bg-white shadow-4 d-flex flex-column"
+            className="rounded-16 shadow-4 d-flex flex-column testimonial-form-modal-container"
             style={{
               maxWidth: "800px",
               width: "100%",
               maxHeight: "90vh",
               overflowY: "auto",
               position: "relative",
+              backgroundColor: isDarkMode ? "#140342" : "#ffffff",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="close cursor"
+              className="close cursor testimonial-form-modal-close"
               onClick={onClose}
               style={{
                 position: "absolute",
                 top: "15px",
                 right: "25px",
-                color: "#333",
+                color: isDarkMode ? "#ffffff" : "#333",
                 fontSize: "35px",
                 fontWeight: "bold",
                 zIndex: 10001,
@@ -214,7 +234,7 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
             </div>
 
             <div className="px-30 py-30 flex-grow-1 overflow-y-auto">
-              <h2 className="text-24 lh-1 fw-700 mb-30">
+              <h2 className={`text-24 lh-1 fw-700 mb-30 ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 {isEditMode ? "Edit Testimonial" : "Add New Testimonial"}
               </h2>
 
@@ -225,9 +245,23 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
               )}
 
               <form onSubmit={handleSubmit} className="contact-form row y-gap-30">
+                <style>
+                  {`
+                    .testimonial-form-modal-container input::placeholder,
+                    .testimonial-form-modal-container textarea::placeholder {
+                      color: ${isDarkMode ? "rgba(255, 255, 255, 0.5)" : "#999"} !important;
+                    }
+                    .testimonial-form-modal-container input:focus,
+                    .testimonial-form-modal-container textarea:focus {
+                      outline: none;
+                      border-color: #6366f1 !important;
+                      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+                    }
+                  `}
+                </style>
                 {/* Heading */}
                 <div className="col-12">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+                  <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                     Heading <span className="text-red-1">*</span>
                   </label>
                   <input
@@ -238,19 +272,20 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                     onChange={handleChange}
                     placeholder="Enter testimonial heading"
                     style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #DDDDDD",
+                      backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                      border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                       borderRadius: "8px",
                       padding: "15px 22px",
                       fontSize: "15px",
                       width: "100%",
+                      color: isDarkMode ? "#ffffff" : "#000000",
                     }}
                   />
                 </div>
 
                 {/* Quote */}
                 <div className="col-12">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+                  <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                     Quote <span className="text-red-1">*</span>
                   </label>
                   <textarea
@@ -261,21 +296,22 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                     placeholder="Enter testimonial quote"
                     rows="4"
                     style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #DDDDDD",
+                      backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                      border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                       borderRadius: "8px",
                       padding: "15px 22px",
                       fontSize: "15px",
                       width: "100%",
                       resize: "vertical",
                       fontFamily: "inherit",
+                      color: isDarkMode ? "#ffffff" : "#000000",
                     }}
                   />
                 </div>
 
                 {/* Author Name */}
                 <div className="col-lg-6">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+                  <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                     Author Name <span className="text-red-1">*</span>
                   </label>
                   <input
@@ -286,19 +322,20 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                     onChange={handleChange}
                     placeholder="Enter author name"
                     style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #DDDDDD",
+                      backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                      border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                       borderRadius: "8px",
                       padding: "15px 22px",
                       fontSize: "15px",
                       width: "100%",
+                      color: isDarkMode ? "#ffffff" : "#000000",
                     }}
                   />
                 </div>
 
                 {/* Author Class */}
                 <div className="col-lg-6">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+                  <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                     Author Class
                   </label>
                   <input
@@ -308,19 +345,20 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                     onChange={handleChange}
                     placeholder="e.g., Class 12 Science"
                     style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #DDDDDD",
+                      backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                      border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                       borderRadius: "8px",
                       padding: "15px 22px",
                       fontSize: "15px",
                       width: "100%",
+                      color: isDarkMode ? "#ffffff" : "#000000",
                     }}
                   />
                 </div>
 
                 {/* Author Details */}
                 <div className="col-lg-6">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+                  <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                     Author Details
                   </label>
                   <input
@@ -330,19 +368,20 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                     onChange={handleChange}
                     placeholder="e.g., Class 12 • PCM"
                     style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #DDDDDD",
+                      backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                      border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                       borderRadius: "8px",
                       padding: "15px 22px",
                       fontSize: "15px",
                       width: "100%",
+                      color: isDarkMode ? "#ffffff" : "#000000",
                     }}
                   />
                 </div>
 
                 {/* Order */}
                 <div className="col-lg-6">
-                  <label className="text-16 lh-1 fw-500 text-dark-1 mb-10 d-block">
+                  <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                     Order
                   </label>
                   <input
@@ -353,12 +392,13 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                     placeholder="Display order (0, 1, 2, ...)"
                     min="0"
                     style={{
-                      backgroundColor: "#ffffff",
-                      border: "1px solid #DDDDDD",
+                      backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                      border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                       borderRadius: "8px",
                       padding: "15px 22px",
                       fontSize: "15px",
                       width: "100%",
+                      color: isDarkMode ? "#ffffff" : "#000000",
                     }}
                   />
                 </div>
@@ -381,7 +421,7 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                               cursor: "pointer",
                             }}
                           />
-                          <span className="text-16 fw-500 text-dark-1">Is Active</span>
+                          <span className={`text-16 fw-500 ${isDarkMode ? "text-white" : "text-dark-1"}`}>Is Active</span>
                         </label>
                       </div>
                     </div>
