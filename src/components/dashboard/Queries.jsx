@@ -300,43 +300,7 @@ export default function Queries() {
         <div className="row items-center justify-between">
           <div className="col-auto">
             <div className="text-13 lh-1">
-              © 2022 Edunoble. All Right Reserved.
-            </div>
-          </div>
-
-          <div className="col-auto">
-            <div className="d-flex items-center">
-              <div className="d-flex items-center flex-wrap x-gap-20">
-                <div>
-                  <Link to="/help-center" className="text-13 lh-1">
-                    Help
-                  </Link>
-                </div>
-                <div>
-                  <Link to="/terms" className="text-13 lh-1">
-                    Privacy Policy
-                  </Link>
-                </div>
-                <div>
-                  <a href="#" className="text-13 lh-1">
-                    Cookie Notice
-                  </a>
-                </div>
-                <div>
-                  <a href="#" className="text-13 lh-1">
-                    Security
-                  </a>
-                </div>
-                <div>
-                  <Link to="/terms" className="text-13 lh-1">
-                    Terms of Use
-                  </Link>
-                </div>
-              </div>
-
-              <button className="button -md -rounded bg-light-4 text-light-1 ml-30">
-                English
-              </button>
+              © 2026 Edunoble. All Right Reserved.
             </div>
           </div>
         </div>

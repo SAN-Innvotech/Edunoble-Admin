@@ -16,7 +16,7 @@ export default function DshbQueriesPage() {
     <div className="barba-container" data-barba="container">
       <MetaComponent meta={metadata} />
       <main className="main-content">
-        <Preloader />
+        {/* <Preloader /> */}
         <HeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
           <div
