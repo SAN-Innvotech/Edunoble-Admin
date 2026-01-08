@@ -761,6 +761,16 @@ export default function PapersDashboard() {
         </div>
       </div>
 
+      <footer className="footer -dashboard py-30">
+        <div className="row items-center justify-between">
+          <div className="col-auto">
+            <div className="text-13 lh-1">
+              © 2026 Edunoble. All Right Reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+
       <PaperFormModal
         isOpen={isModalOpen}
         onClose={() => {

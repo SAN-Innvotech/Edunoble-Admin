@@ -114,12 +114,12 @@ export default function HeaderDashboard() {
                   <Link data-barba to="/">
                     <img
                       className="-light-d-none"
-                      src="/assets/img/general/logo1.jpeg"
+                      src="/assets/img/general/logo-edunoble.png"
                       alt="logo"
                     />
                     <img
                       className="-dark-d-none"
-                      src="/assets/img/general/logo1.jpeg"
+                      src="/assets/img/general/logo-edunoble.png"
                       alt="logo"
                     />
                   </Link>
