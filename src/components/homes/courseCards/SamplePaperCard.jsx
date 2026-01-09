@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Chip } from "@mui/material";
 import SecureDocumentViewer from "../../common/SecureDocumentViewer";
 import { createPortal } from "react-dom";
 
 export default function SamplePaperCard({ paper, onEdit }) {
   const [showViewer, setShowViewer] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains("-dark-mode"));
+    };
+    
+    checkDarkMode();
+    
+    // Watch for dark mode changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    
+    return () => observer.disconnect();
+  }, []);
 
   const handleViewPaper = (e) => {
     e.preventDefault();
@@ -27,9 +46,22 @@ export default function SamplePaperCard({ paper, onEdit }) {
       </style>
       <div className="col-lg-3 col-md-6">
         <div>
-          <div className="coursesCard -type-1 bg-white samplePaperCard">
+          <div 
+            className={`coursesCard -type-1 samplePaperCard ${isDarkMode ? "" : "bg-white"}`}
+            style={{
+              backgroundColor: isDarkMode ? "#2B1C55" : undefined,
+              borderRadius: isDarkMode ? "16px" : undefined,
+              padding: isDarkMode ? "5px" : undefined,
+              overflow: "hidden",
+            }}
+          >
             <div className="relative">
-              <div className="coursesCard__image overflow-hidden rounded-8 d-flex align-items-center justify-center bg-light-4">
+              <div 
+                className="coursesCard__image overflow-hidden rounded-8 d-flex align-items-center justify-center"
+                style={{
+                  backgroundColor: isDarkMode ? "rgba(255, 255, 255, 0.05)" : undefined,
+                }}
+              >
                 <div className="w-1/1 d-flex items-center justify-center py-40">
                   <div className="size-60 rounded-full bg-purple-1 d-flex items-center justify-center">
                     <span className="text-white fw-600 text-16">DOC</span>
@@ -39,8 +71,8 @@ export default function SamplePaperCard({ paper, onEdit }) {
               </div>
             </div>
 
-            <div className="h-100 pt-15">
-              <div className="text-15 lh-1 text-dark-1 mb-5 d-flex items-center">
+            <div className={`h-100 ${isDarkMode ? "pt-15" : "pt-15"}`}>
+              <div className={`text-15 lh-1 mb-5 d-flex items-center ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 <span>
                   Class {paper.class} • {paper.subject}
                 </span>
@@ -97,11 +129,11 @@ export default function SamplePaperCard({ paper, onEdit }) {
                 </span>
               </div>
 
-              <div className="text-17 lh-15 fw-500 text-dark-1 mt-5">
+              <div className={`text-17 lh-15 fw-500 mt-5 ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 {paper.title}
               </div>
 
-              <div className="mt-10 text-13 text-light-1">
+              <div className={`mt-10 text-13 ${isDarkMode ? "text-white" : "text-light-1"}`}>
                 {paper.board && <span>{paper.board}</span>}
                 {paper.board && paper.examType && <span> • </span>}
                 {paper.examType && <span>{paper.examType}</span>}
@@ -111,7 +143,7 @@ export default function SamplePaperCard({ paper, onEdit }) {
 
               {paper.description && (
                 <div
-                  className="mt-10 text-13 text-light-1"
+                  className={`mt-10 text-13 ${isDarkMode ? "text-white" : "text-light-1"}`}
                   style={{
                     display: "-webkit-box",
                     WebkitBoxOrient: "vertical",
@@ -134,7 +166,8 @@ export default function SamplePaperCard({ paper, onEdit }) {
                         fontSize: "11px",
                         borderRadius: "999px",
                         marginRight: "5px",
-                        bgcolor: "rgba(148, 163, 184, 0.12)",
+                        bgcolor: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(148, 163, 184, 0.12)",
+                        color: isDarkMode ? "#ffffff" : undefined,
                       }}
                     />
                   ))}

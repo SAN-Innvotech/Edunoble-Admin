@@ -418,3 +418,42 @@
 .linkCustomTwo{
     text-decoration: none;
 }
+
+/* Dashboard sidebar dark/light mode support */
+.sidebar.-dashboard .sidebar__item a {
+    color: inherit;
+}
+
+.sidebar.-dashboard .sidebar__item .icon {
+    color: inherit;
+}
+
+/* Dark mode styles */
+html.-dark-mode .sidebar.-dashboard .sidebar__item {
+    color: #6A7A99 !important;
+}
+
+html.-dark-mode .sidebar.-dashboard .sidebar__item .icon {
+    color: #6A7A99 !important;
+}
+
+html.-dark-mode .sidebar.-dashboard .sidebar__item.-is-active {
+    background-color: white !important;
+    color: #000000 !important;
+}
+
+html.-dark-mode .sidebar.-dashboard .sidebar__item.-is-active a {
+    color: #000000 !important;
+}
+
+html.-dark-mode .sidebar.-dashboard .sidebar__item.-is-active .icon {
+    color: #000000 !important;
+}
+
+html.-dark-mode .sidebar.-dashboard .sidebar__item:hover {
+    color: white !important;
+}
+
+html.-dark-mode .sidebar.-dashboard .sidebar__item:hover .icon {
+    color: white !important;
+}

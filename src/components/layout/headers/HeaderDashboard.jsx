@@ -110,7 +110,10 @@ export default function HeaderDashboard() {
                   </button>
                 </div>
 
-                <div className="header__logo ml-30 md:ml-20" style={{ width: "160px" }}>
+                <div
+                  className="header__logo ml-30 md:ml-20"
+                  style={{ width: "160px" }}
+                >
                   <Link data-barba to="/">
                     <img
                       className="-light-d-none"
@@ -277,16 +280,21 @@ export default function HeaderDashboard() {
                   </div>
                 </div> */}
 
+                <div>
+                  <button
+                    onClick={handleDarkmode}
+                    className="js-darkmode-toggle text-light-1 d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light"
+                  >
+                    <i className="text-24 icon icon-night"></i>
+                  </button>
+                </div>
+
                 <div
                   className="relative d-flex items-center ml-10"
                   onClick={() => setIsOnProfile((pre) => !pre)}
                 >
-                  <a href="#" data-el-toggle=".js-profile-toggle">
-                    <img
-                      className="size-50"
-                      src="/assets/img/misc/user-profile.png"
-                      alt="image"
-                    />
+                  <a href="#" data-el-toggle=".js-profile-toggle" className="d-flex items-center justify-center size-50 rounded-16 -hover-dshb-header-light">
+                    <i className="text-24 icon -dark-text-white icon-person-3"></i>
                   </a>
 
                   <div
