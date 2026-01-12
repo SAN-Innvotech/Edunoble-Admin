@@ -7,10 +7,9 @@ import React from "react";
 import MetaComponent from "@/components/common/MetaComponent";
 
 const metadata = {
-  title:
-    "Cashboard || Edunoble - Professional LMS Online Education Course ReactJS Template",
+  title: "Dashboard || Edunoble Admin - Manage Papers, Testimonials & Queries",
   description:
-    "Elevate your e-learning content with Edunoble, the most impressive LMS template for online courses, education and LMS platforms.",
+    "Edunoble Admin Dashboard - View analytics, manage papers, testimonials, queries, and track platform performance.",
 };
 
 export default function DashboardPage() {
@@ -18,7 +17,7 @@ export default function DashboardPage() {
     <div className="barba-container" data-barba="container">
       <MetaComponent meta={metadata} />
       <main className="main-content">
-        <Preloader />
+        {/* <Preloader /> */}
         <HeaderDashboard />
         <div className="content-wrapper js-content-wrapper overflow-hidden">
           <div

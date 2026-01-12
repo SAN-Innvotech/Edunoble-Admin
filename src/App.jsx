@@ -174,7 +174,14 @@ function App() {
                 element={<InstractoBacomePage />}
               /> */}
 
-              {/* <Route path="dashboard" element={<DashboardPage />} /> */}
+              <Route
+                path="dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="dshb-papers"
                 element={

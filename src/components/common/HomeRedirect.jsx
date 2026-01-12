@@ -8,7 +8,7 @@ export default function HomeRedirect() {
 
   // If authenticated, redirect to dashboard
   if (auth && auth.token) {
-    return <Navigate to="/dshb-papers" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   // If not authenticated, show login page
