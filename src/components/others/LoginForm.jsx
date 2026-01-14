@@ -188,13 +188,12 @@ export default function LoginForm() {
                   </div>
                 </div>
                 <div className="col-12">
-                  <div className="d-flex justify-end">
+              <div className="d-flex justify-end">
                     <button
                       type="button"
                       className="text-14 text-purple-1 fw-500 -underline"
                       onClick={() => {
-                        // TODO: Implement forgot password functionality
-                        console.log("Forgot password clicked");
+                    navigate("/forgot-password");
                       }}
                     >
                       Forgot Password?

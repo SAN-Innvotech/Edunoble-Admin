@@ -83,6 +83,7 @@ import PricingPage from "./pages/others/pricing";
 import TermsPage from "./pages/others/terms";
 import HelpCenterPage from "./pages/others/help-center";
 import LoginPage from "./pages/others/login";
+import ForgotPasswordPage from "./pages/others/forgot-password";
 import SignupPage from "./pages/others/signup";
 import UIElementsPage from "./pages/others/ui-elements";
 import EventListPage2 from "./pages/events/event-list-2";
@@ -266,6 +267,7 @@ function App() {
               {/* <Route path="terms" element={<TermsPage />} /> */}
               {/* <Route path="help-center" element={<HelpCenterPage />} /> */}
               <Route path="login" element={<LoginPage />} />
+              <Route path="forgot-password" element={<ForgotPasswordPage />} />
               {/* <Route path="signup" element={<SignupPage />} /> */}
               {/* <Route path="ui-elements" element={<UIElementsPage />} /> */}
             </Route>
