@@ -48,6 +48,7 @@ import DshbListingPage from "./pages/dashboard/dshb-listing";
 import DshbReviewsPage from "./pages/dashboard/dshb-reviews";
 import DshbTestimonialsPage from "./pages/dashboard/dshb-testimonials";
 import DshbQueriesPage from "./pages/dashboard/dshb-queries";
+import DshbContentPage from "./pages/dashboard/dshb-content";
 import DshbSettingsPage from "./pages/dashboard/dshb-settings";
 import DshbAdministrationPage from "./pages/dashboard/dshb-administration";
 import DshbAssignmentPage from "./pages/dashboard/dshb-assignment";
@@ -206,6 +207,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <DshbQueriesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="dshb-content"
+                element={
+                  <ProtectedRoute>
+                    <DshbContentPage />
                   </ProtectedRoute>
                 }
               />
