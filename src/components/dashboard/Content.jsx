@@ -38,15 +38,14 @@ export default function Content() {
 
       if (result.isSuccess && result.data) {
         // Sort by type and order
-        const sortedContents = result.data
-          .sort((a, b) => {
-            // First sort by type (about first, then vision)
-            if (a.type !== b.type) {
-              return a.type === "about" ? -1 : 1;
-            }
-            // Then sort by order
-            return (a.order || 0) - (b.order || 0);
-          });
+        const sortedContents = result.data.sort((a, b) => {
+          // First sort by type (about first, then vision)
+          if (a.type !== b.type) {
+            return a.type === "about" ? -1 : 1;
+          }
+          // Then sort by order
+          return (a.order || 0) - (b.order || 0);
+        });
         setContents(sortedContents);
       } else {
         throw new Error(result.message || "Failed to fetch content");
@@ -125,9 +124,31 @@ export default function Content() {
               </div>
 
               <div className="py-30 px-30">
+                <style>
+                  {`
+                    @media (max-width: 768px) {
+                      .content-item-container {
+                        flex-direction: column !important;
+                      }
+                      .content-item-content {
+                        width: 100% !important;
+                        padding-right: 0 !important;
+                      }
+                      .content-edit-button {
+                        position: relative !important;
+                        top: auto !important;
+                        right: auto !important;
+                        margin-top: 15px !important;
+                        align-self: flex-end !important;
+                      }
+                    }
+                  `}
+                </style>
                 {loading && (
                   <div className="text-center py-50">
-                    <div className="text-16 text-dark-1">Loading content...</div>
+                    <div className="text-16 text-dark-1 -dark-text-white">
+                      Loading content...
+                    </div>
                   </div>
                 )}
 
@@ -142,77 +163,81 @@ export default function Content() {
                     {aboutContents.map((content, i) => (
                       <div key={content._id} className="col-12">
                         <div
-                          className={`d-flex ${
+                          className={`d-flex content-item-container ${
                             i !== 0 ? "border-top-light pt-30" : "pt-0"
                           } relative`}
                           style={{ position: "relative" }}
                         >
-                          <div className="flex-1">
-                            <div className="d-flex items-center mb-15">
-                              <h4 className="text-17 fw-500 lh-15">
-                                {content.title}
-                              </h4>
-                              <div className="ml-10">
-                                {content.isActive !== false ? (
-                                  <span
-                                    className="d-flex items-center px-10 py-5 rounded-200"
-                                    style={{
-                                      backgroundColor: "#d1fae5",
-                                      color: "#065f46",
-                                      fontSize: "12px",
-                                      fontWeight: "500",
-                                      gap: "6px",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
+                          <div className="flex-1 content-item-content" style={{ paddingRight: "50px" }}>
+                            <div className="d-flex items-center mb-15" style={{ flexWrap: "wrap", gap: "10px" }}>
+                              <div className="d-flex items-center" style={{ flexWrap: "wrap", gap: "10px" }}>
+                                <h4 className="text-17 fw-500 lh-15 text-dark-1 -dark-text-white">
+                                  {content.title}
+                                </h4>
+                                <div className="d-flex items-center" style={{ gap: "10px" }}>
+                                  <div>
+                                    {content.isActive !== false ? (
+                                      <span
+                                        className="d-flex items-center px-10 py-5 rounded-200"
+                                        style={{
+                                          backgroundColor: "#d1fae5",
+                                          color: "#065f46",
+                                          fontSize: "12px",
+                                          fontWeight: "500",
+                                          gap: "6px",
+                                          whiteSpace: "nowrap",
+                                        }}
+                                      >
+                                        <span
+                                          style={{
+                                            width: "8px",
+                                            height: "8px",
+                                            borderRadius: "50%",
+                                            backgroundColor: "#10b981",
+                                            display: "inline-block",
+                                          }}
+                                        ></span>
+                                        Active
+                                      </span>
+                                    ) : (
+                                      <span
+                                        className="d-flex items-center px-10 py-5 rounded-200"
+                                        style={{
+                                          backgroundColor: "#fee2e2",
+                                          color: "#991b1b",
+                                          fontSize: "12px",
+                                          fontWeight: "500",
+                                          gap: "6px",
+                                          whiteSpace: "nowrap",
+                                        }}
+                                      >
+                                        <span
+                                          style={{
+                                            width: "8px",
+                                            height: "8px",
+                                            borderRadius: "50%",
+                                            backgroundColor: "#ef4444",
+                                            display: "inline-block",
+                                          }}
+                                        ></span>
+                                        Inactive
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div>
                                     <span
+                                      className="px-10 py-5 rounded-200"
                                       style={{
-                                        width: "8px",
-                                        height: "8px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "#10b981",
-                                        display: "inline-block",
+                                        backgroundColor: "#e0e7ff",
+                                        color: "#3730a3",
+                                        fontSize: "12px",
+                                        fontWeight: "500",
                                       }}
-                                    ></span>
-                                    Active
-                                  </span>
-                                ) : (
-                                  <span
-                                    className="d-flex items-center px-10 py-5 rounded-200"
-                                    style={{
-                                      backgroundColor: "#fee2e2",
-                                      color: "#991b1b",
-                                      fontSize: "12px",
-                                      fontWeight: "500",
-                                      gap: "6px",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        width: "8px",
-                                        height: "8px",
-                                        borderRadius: "50%",
-                                        backgroundColor: "#ef4444",
-                                        display: "inline-block",
-                                      }}
-                                    ></span>
-                                    Inactive
-                                  </span>
-                                )}
-                              </div>
-                              <div className="ml-10">
-                                <span
-                                  className="px-10 py-5 rounded-200"
-                                  style={{
-                                    backgroundColor: "#e0e7ff",
-                                    color: "#3730a3",
-                                    fontSize: "12px",
-                                    fontWeight: "500",
-                                  }}
-                                >
-                                  Order: {content.order}
-                                </span>
+                                    >
+                                      Order: {content.order}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
 
@@ -226,6 +251,7 @@ export default function Content() {
                                     maxHeight: "200px",
                                     borderRadius: "8px",
                                     objectFit: "cover",
+                                    width: "100%",
                                   }}
                                 />
                               </div>
@@ -238,10 +264,10 @@ export default function Content() {
 
                           <button
                             onClick={() => handleEditContent(content)}
-                            className="button -sm d-flex items-center justify-center"
+                            className="button -sm d-flex items-center justify-center content-edit-button"
                             style={{
                               position: "absolute",
-                              top: "0",
+                              top: i !== 0 ? "30px" : "0",
                               right: "0",
                               border: "1px solid #6366f1",
                               background: "white",
@@ -263,7 +289,7 @@ export default function Content() {
                   </div>
                 ) : !loading && !error ? (
                   <div className="text-center py-50">
-                    <div className="text-16 text-dark-1">
+                    <div className="text-16 text-dark-1 -dark-text-white">
                       No About Us content found
                     </div>
                   </div>
@@ -282,7 +308,9 @@ export default function Content() {
               <div className="py-30 px-30">
                 {loading && (
                   <div className="text-center py-50">
-                    <div className="text-16 text-dark-1">Loading content...</div>
+                    <div className="text-16 text-dark-1">
+                      Loading content...
+                    </div>
                   </div>
                 )}
 
@@ -381,6 +409,7 @@ export default function Content() {
                                     maxHeight: "200px",
                                     borderRadius: "8px",
                                     objectFit: "cover",
+                                    width: "100%",
                                   }}
                                 />
                               </div>
@@ -393,10 +422,10 @@ export default function Content() {
 
                           <button
                             onClick={() => handleEditContent(content)}
-                            className="button -sm d-flex items-center justify-center"
+                            className="button -sm d-flex items-center justify-center content-edit-button"
                             style={{
                               position: "absolute",
-                              top: "0",
+                              top: i !== 0 ? "30px" : "0",
                               right: "0",
                               border: "1px solid #6366f1",
                               background: "white",
@@ -418,7 +447,7 @@ export default function Content() {
                   </div>
                 ) : !loading && !error ? (
                   <div className="text-center py-50">
-                    <div className="text-16 text-dark-1">
+                    <div className="text-16 text-dark-1 -dark-text-white">
                       No Vision content found
                     </div>
                   </div>

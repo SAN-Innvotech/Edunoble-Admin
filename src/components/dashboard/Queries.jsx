@@ -106,9 +106,53 @@ export default function Queries() {
               </div>
 
               <div className="py-30 px-30">
+                <style>
+                  {`
+                    @media (max-width: 768px) {
+                      .query-item-container {
+                        flex-direction: column !important;
+                      }
+                      .query-avatar {
+                        margin-right: 0 !important;
+                        margin-bottom: 15px !important;
+                      }
+                      .query-content {
+                        width: 100% !important;
+                        padding-right: 0 !important;
+                      }
+                      .query-header-row {
+                        flex-direction: column !important;
+                        align-items: flex-start !important;
+                        gap: 10px !important;
+                      }
+                      .query-name-email {
+                        flex-direction: column !important;
+                        align-items: flex-start !important;
+                        width: 100% !important;
+                      }
+                      .query-name-email span {
+                        margin-left: 0 !important;
+                        margin-top: 5px !important;
+                      }
+                      .query-actions {
+                        position: relative !important;
+                        top: auto !important;
+                        right: auto !important;
+                        margin-top: 15px !important;
+                        width: 100% !important;
+                        justify-content: flex-start !important;
+                      }
+                      .query-meta-info {
+                        flex-direction: column !important;
+                        align-items: flex-start !important;
+                        gap: 5px !important;
+                      }
+                    }
+                  `}
+                </style>
                 {loading && (
                   <div className="text-center py-50">
-                    <div className="text-16 text-dark-1">Loading queries...</div>
+                    <div className="text-16 text-dark-1 -dark-text-white">Loading queries...</div>
                   </div>
                 )}
 
@@ -122,14 +166,14 @@ export default function Queries() {
                   <div className="row y-gap-30">
                     {queries.length > 0 ? (
                       queries.map((query, i) => (
-                        <div key={query._id || i} className="md:direction-column">
+                        <div key={query._id || i} className="col-12">
                           <div
-                            className={`d-flex ${
+                            className={`d-flex query-item-container ${
                               i != 0 ? "border-top-light" : ""
-                            }  pt-30 relative`}
+                            } pt-30 relative`}
                             style={{ position: "relative" }}
                           >
-                            <div className="mr-20">
+                            <div className="mr-20 query-avatar">
                               <div
                                 className="size-60 rounded-full bg-purple-1 d-flex items-center justify-center"
                                 style={{
@@ -144,17 +188,17 @@ export default function Queries() {
                               </div>
                             </div>
 
-                            <div className="comments__body md:mt-15 flex-1">
+                            <div className="comments__body query-content flex-1" style={{ paddingRight: "120px" }}>
                               <div className="comments__header">
-                                <div className="d-flex items-center">
-                                  <h4 className="text-17 fw-500 lh-15 d-flex items-center">
+                                <div className="d-flex items-center query-header-row" style={{ flexWrap: "wrap", gap: "10px" }}>
+                                  <h4 className="text-17 fw-500 lh-15 d-flex items-center query-name-email" style={{ flexWrap: "wrap" }}>
                                     {query.name || "Anonymous"}
-                                    <span className="text-13 text-light-1 fw-400 ml-5">
+                                    <span className="text-13 text-light-1 fw-400 ml-5" style={{ display: "block", width: "100%" }}>
                                       {query.email || ""}
                                       {query.phone ? ` • ${query.phone}` : ""}
                                     </span>
                                   </h4>
-                                  <div className="ml-10">
+                                  <div>
                                     {query.isResolved ? (
                                       <span
                                         className="d-flex items-center px-10 py-5 rounded-200"
@@ -204,14 +248,14 @@ export default function Queries() {
                                     )}
                                   </div>
                                 </div>
-                                <div className="mt-10 d-flex items-center x-gap-10">
+                                <div className="mt-10 d-flex items-center x-gap-10 query-meta-info" style={{ flexWrap: "wrap" }}>
                                   {query.source && (
-                                    <span className="text-13 text-light-1">
+                                    <span className="text-13 text-light-1 -dark-text-white">
                                       Source: {query.source}
                                     </span>
                                   )}
                                   {query.createdAt && (
-                                    <span className="text-13 text-light-1">
+                                    <span className="text-13 text-light-1 -dark-text-white">
                                       • {formatDate(query.createdAt)}
                                     </span>
                                   )}
@@ -219,12 +263,12 @@ export default function Queries() {
                               </div>
 
                               <div className="mt-15">
-                                <span className="text-13 text-light-1 fw-500">Subject: </span>
-                                <h5 className="text-15 fw-500 d-inline">
+                                <span className="text-13 text-light-1 -dark-text-white fw-500">Subject: </span>
+                                <h5 className="text-15 fw-500 d-inline text-dark-1 -dark-text-white">
                                   {query.subject || "No Subject"}
                                 </h5>
                               </div>
-                              <div className="comments__text mt-10">
+                              <div className="comments__text mt-10 text-dark-1 -dark-text-white">
                                 <p>{query.message || "No message"}</p>
                               </div>
 
@@ -232,10 +276,10 @@ export default function Queries() {
                               {query.isResolved && query.notes && (
                                 <>
                                   <div className="border-top-light mt-20 pt-20">
-                                    <div className="text-13 text-light-1 fw-500 mb-10">
+                                    <div className="text-13 text-light-1 -dark-text-white fw-500 mb-10">
                                       Resolution Notes:
                                     </div>
-                                    <div className="text-14 text-dark-1">
+                                    <div className="text-14 text-dark-1 -dark-text-white">
                                       {query.notes}
                                     </div>
                                   </div>
@@ -244,6 +288,7 @@ export default function Queries() {
                             </div>
 
                             <div
+                              className="query-actions"
                               style={{
                                 position: "absolute",
                                 top: "30px",
@@ -283,7 +328,7 @@ export default function Queries() {
                       ))
                     ) : (
                       <div className="col-12 text-center py-50">
-                        <div className="text-16 text-dark-1">
+                        <div className="text-16 text-dark-1 -dark-text-white">
                           No queries found
                         </div>
                       </div>

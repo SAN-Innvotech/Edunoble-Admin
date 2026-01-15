@@ -115,9 +115,33 @@ export default function Testimonials() {
               </div>
 
               <div className="py-30 px-30">
+                <style>
+                  {`
+                    @media (max-width: 768px) {
+                      .testimonial-item-container {
+                        flex-direction: column !important;
+                      }
+                      .testimonial-avatar {
+                        margin-right: 0 !important;
+                        margin-bottom: 15px !important;
+                      }
+                      .testimonial-content {
+                        width: 100% !important;
+                        padding-right: 0 !important;
+                      }
+                      .testimonial-edit-button {
+                        position: relative !important;
+                        top: auto !important;
+                        right: auto !important;
+                        margin-top: 15px !important;
+                        align-self: flex-end !important;
+                      }
+                    }
+                  `}
+                </style>
                 {loading && (
                   <div className="text-center py-50">
-                    <div className="text-16 text-dark-1">Loading testimonials...</div>
+                    <div className="text-16 text-dark-1 -dark-text-white">Loading testimonials...</div>
                   </div>
                 )}
 
@@ -131,14 +155,14 @@ export default function Testimonials() {
                   <div className="row y-gap-30">
                     {testimonials.length > 0 ? (
                       testimonials.map((testimonial, i) => (
-                        <div key={testimonial._id || i} className="md:direction-column">
+                        <div key={testimonial._id || i} className="col-12">
                           <div
-                            className={`d-flex ${
+                            className={`d-flex testimonial-item-container ${
                               i != 0 ? "border-top-light" : ""
-                            }  pt-30 relative`}
+                            } pt-30 relative`}
                             style={{ position: "relative" }}
                           >
-                            <div className="mr-20">
+                            <div className="mr-20 testimonial-avatar">
                               <div
                                 className="size-60 rounded-full bg-purple-1 d-flex items-center justify-center"
                                 style={{
@@ -153,81 +177,83 @@ export default function Testimonials() {
                               </div>
                             </div>
 
-                            <div className="comments__body md:mt-15 flex-1">
+                            <div className="comments__body md:mt-15 flex-1" style={{ paddingRight: "50px" }}>
                               <div className="comments__header">
-                                <div className="d-flex items-center">
-                                  <h4 className="text-17 fw-500 lh-15 d-flex items-center">
-                                    {testimonial.authorName || "Anonymous"}
-                                    <span className="text-13 text-light-1 fw-400 ml-5">
-                                      {testimonial.authorClass || ""}
-                                      {testimonial.authorDetails
-                                        ? ` • ${testimonial.authorDetails}`
-                                        : ""}
-                                    </span>
-                                  </h4>
-                                  <div className="ml-10">
-                                    {testimonial.isActive !== false ? (
-                                      <span
-                                        className="d-flex items-center px-10 py-5 rounded-200"
-                                        style={{
-                                          backgroundColor: "#d1fae5",
-                                          color: "#065f46",
-                                          fontSize: "12px",
-                                          fontWeight: "500",
-                                          gap: "6px",
-                                          whiteSpace: "nowrap",
-                                        }}
-                                      >
-                                        <span
-                                          style={{
-                                            width: "8px",
-                                            height: "8px",
-                                            borderRadius: "50%",
-                                            backgroundColor: "#10b981",
-                                            display: "inline-block",
-                                          }}
-                                        ></span>
-                                        Active
+                                <div className="d-flex items-center" style={{ flexWrap: "wrap", gap: "10px" }}>
+                                  <div className="d-flex items-center" style={{ flexWrap: "wrap", gap: "10px" }}>
+                                    <h4 className="text-17 fw-500 lh-15 d-flex items-center text-dark-1 -dark-text-white">
+                                      {testimonial.authorName || "Anonymous"}
+                                      <span className="text-13 text-light-1 -dark-text-white fw-400 ml-5">
+                                        {testimonial.authorClass || ""}
+                                        {testimonial.authorDetails
+                                          ? ` • ${testimonial.authorDetails}`
+                                          : ""}
                                       </span>
-                                    ) : (
-                                      <span
-                                        className="d-flex items-center px-10 py-5 rounded-200"
-                                        style={{
-                                          backgroundColor: "#fee2e2",
-                                          color: "#991b1b",
-                                          fontSize: "12px",
-                                          fontWeight: "500",
-                                          gap: "6px",
-                                          whiteSpace: "nowrap",
-                                        }}
-                                      >
+                                    </h4>
+                                    <div>
+                                      {testimonial.isActive !== false ? (
                                         <span
+                                          className="d-flex items-center px-10 py-5 rounded-200"
                                           style={{
-                                            width: "8px",
-                                            height: "8px",
-                                            borderRadius: "50%",
-                                            backgroundColor: "#ef4444",
-                                            display: "inline-block",
+                                            backgroundColor: "#d1fae5",
+                                            color: "#065f46",
+                                            fontSize: "12px",
+                                            fontWeight: "500",
+                                            gap: "6px",
+                                            whiteSpace: "nowrap",
                                           }}
-                                        ></span>
-                                        Inactive
-                                      </span>
-                                    )}
+                                        >
+                                          <span
+                                            style={{
+                                              width: "8px",
+                                              height: "8px",
+                                              borderRadius: "50%",
+                                              backgroundColor: "#10b981",
+                                              display: "inline-block",
+                                            }}
+                                          ></span>
+                                          Active
+                                        </span>
+                                      ) : (
+                                        <span
+                                          className="d-flex items-center px-10 py-5 rounded-200"
+                                          style={{
+                                            backgroundColor: "#fee2e2",
+                                            color: "#991b1b",
+                                            fontSize: "12px",
+                                            fontWeight: "500",
+                                            gap: "6px",
+                                            whiteSpace: "nowrap",
+                                          }}
+                                        >
+                                          <span
+                                            style={{
+                                              width: "8px",
+                                              height: "8px",
+                                              borderRadius: "50%",
+                                              backgroundColor: "#ef4444",
+                                              display: "inline-block",
+                                            }}
+                                          ></span>
+                                          Inactive
+                                        </span>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
 
-                              <h5 className="text-15 fw-500 mt-15">
+                              <h5 className="text-15 fw-500 mt-15 text-dark-1 -dark-text-white">
                                 {testimonial.heading}
                               </h5>
-                              <div className="comments__text mt-10">
+                              <div className="comments__text mt-10 text-dark-1 -dark-text-white">
                                 <p>{testimonial.quote}</p>
                               </div>
                             </div>
 
                             <button
                               onClick={() => handleEditTestimonial(testimonial)}
-                              className="button -sm d-flex items-center justify-center"
+                              className="button -sm d-flex items-center justify-center testimonial-edit-button"
                               style={{
                                 position: "absolute",
                                 top: "30px",
@@ -243,7 +269,6 @@ export default function Testimonials() {
                                 zIndex: 10,
                                 transition: "all 0.3s ease",
                               }}
-                           
                             >
                               <i className="icon-edit text-16"></i>
                             </button>
@@ -252,7 +277,7 @@ export default function Testimonials() {
                       ))
                     ) : (
                       <div className="col-12 text-center py-50">
-                        <div className="text-16 text-dark-1">
+                        <div className="text-16 text-dark-1 -dark-text-white">
                           No testimonials found
                         </div>
                       </div>
