@@ -10,7 +10,7 @@ export default function HeaderAuth() {
             <div className="header-left">
               <div className="header__logo " style={{ width: "140px" }}>
                 <Link data-barba to="/">
-                  <img src="/assets/img/general/logo2.png" alt="logo" />
+                  <img src="/assets/img/general/Logo.png" alt="logo" style={{ width: "60px" }} />
                 </Link>
               </div>
             </div>
