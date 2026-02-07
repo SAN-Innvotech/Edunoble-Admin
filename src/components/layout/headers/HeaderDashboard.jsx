@@ -117,13 +117,15 @@ export default function HeaderDashboard() {
                   <Link data-barba to="/">
                     <img
                       className="-light-d-none"
-                      src="/assets/img/general/logo-edunoble.png"
+                      src="/assets/img/general/Logo.png"
                       alt="logo"
+                      style={{ width: "60px" }}
                     />
                     <img
                       className="-dark-d-none"
-                      src="/assets/img/general/logo-edunoble.png"
+                      src="/assets/img/general/Logo.png"
                       alt="logo"
+                      style={{ width: "60px" }}
                     />
                   </Link>
                 </div>
@@ -302,23 +304,22 @@ export default function HeaderDashboard() {
                       isOnProfile ? "-is-el-visible" : ""
                     } -`}
                   >
-                    <div className="toggle-bottom -profile bg-white shadow-4 border-light rounded-8 mt-10">
+                    <div className="toggle-bottom -profile bg-white -dark-bg-dark-2 shadow-4 border-light -dark-border-white-10 rounded-8 mt-10">
                       <div className="px-5 py-5">
                         <div className="sidebar -dashboard">
                           <div className="sidebar__item">
                             <button
                               onClick={handleLogout}
-                              className="d-flex items-center text-17 lh-1 fw-500 w-1/1"
+                              className="d-flex items-center text-17 lh-1 fw-500 w-1/1 text-dark-1 -dark-text-white"
                               style={{
                                 background: "none",
                                 border: "none",
                                 cursor: "pointer",
                                 padding: "0",
                                 textAlign: "left",
-                                color: "inherit",
                               }}
                             >
-                              <i className="text-20 icon-power mr-15"></i>
+                              <i className="text-20 icon-power mr-15 -dark-text-white"></i>
                               Logout
                             </button>
                           </div>

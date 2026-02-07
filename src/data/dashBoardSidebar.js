@@ -6,6 +6,12 @@ export const sidebarItems = [
     text: "Dashboard",
   },
   {
+    id: 24,
+    href: "/dshb-homepage-content",
+    iconClass: "text-20 icon-setting",
+    text: "Homepage Content",
+  },
+  {
     id: 2,
     href: "/dshb-papers",
     iconClass: "text-20 icon-play-button",
@@ -58,12 +64,6 @@ export const sidebarItems = [
     href: "/dshb-faq",
     iconClass: "text-20 icon-comment",
     text: "FAQs",
-  },
-  {
-    id: 24,
-    href: "/dshb-homepage-content",
-    iconClass: "text-20 icon-setting",
-    text: "Homepage Content",
   },
   // {
   //   id: 7,

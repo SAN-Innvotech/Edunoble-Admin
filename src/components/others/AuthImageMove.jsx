@@ -38,17 +38,25 @@ export default function AuthImageMove() {
   }, []);
   return (
     <div className="form-page__img bg-dark-1">
-      <div className="form-page-composition">
-        <div className="-bg">
+      <div className="form-page-composition" style={{ 
+        display: "flex", 
+        alignItems: "center", 
+        justifyContent: "center", 
+        height: "100%",
+        position: "relative",
+        maxWidth: "100%",
+        margin: "0 auto"
+      }}>
+        {/* <div className="-bg">
           <img
             style={{ width: "100%" }}
             data-move="30"
             className="js-mouse-move"
-            src="/assets/img/login/bg.png"
+            src="/assets/img/general/idea1.jpg"
             alt="bg"
           />
-        </div>
-        <div className="-el-1">
+        </div> */}
+        <div className="-el-1" style={{ maxWidth: "20%", margin: "0 auto" }}>
           <img
             style={{ width: "100%" }}
             data-move="20"
@@ -61,7 +69,7 @@ export default function AuthImageMove() {
           <img
             data-move="40"
             className="js-mouse-move"
-            src="/assets/img/home-9/hero/1.png"
+            src="/assets/img/general/image1.jpg"
             alt="icon"
           />
         </div>
@@ -69,16 +77,18 @@ export default function AuthImageMove() {
           <img
             data-move="40"
             className="js-mouse-move"
-            src="/assets/img/home-9/hero/2.png"
+            src="/assets/img/general/idea2.jpg"
             alt="icon"
+            style={{ width: "120px" }}
           />
         </div>
         <div className="-el-4">
           <img
             data-move="40"
             className="js-mouse-move"
-            src="/assets/img/home-9/hero/3.png"
+            src="/assets/img/general/idea1.jpg"
             alt="icon"
+            style={{ width: "120px" }}
           />
         </div>
       </div>
