@@ -56,7 +56,7 @@ export default function AuthImageMove() {
             alt="bg"
           />
         </div> */}
-        <div className="-el-1" style={{ maxWidth: "20%", margin: "0 auto" }}>
+        <div className="-el-1" style={{ maxWidth: "0%", margin: "0 auto" }}>
           <img
             style={{ width: "100%" }}
             data-move="20"
