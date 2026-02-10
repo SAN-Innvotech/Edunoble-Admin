@@ -55,6 +55,7 @@ export default function HomepageContentModal({ isOpen, onClose, section, section
           studentReviewName: initialData.hero.studentReview?.name || "",
           studentReviewClass: initialData.hero.studentReview?.class || "",
           studentReviewImageUrl: initialData.hero.studentReview?.imageUrl || "",
+          logo: initialData.hero.logo || "",
         });
       } else if (section === "mostViewedPapers" && initialData.mostViewedPapers) {
         setFormData({
@@ -262,6 +263,7 @@ export default function HomepageContentModal({ isOpen, onClose, section, section
               class: formData.studentReviewClass || "",
               imageUrl: formData.studentReviewImageUrl || "",
             },
+            logo: formData.logo || "",
           },
         };
       case "mostViewedPapers":
@@ -411,6 +413,75 @@ export default function HomepageContentModal({ isOpen, onClose, section, section
       case "hero":
         return (
           <>
+            <div className="col-12">
+              <div className="d-flex items-center justify-between mb-10">
+                <label className={`text-16 lh-1 fw-500 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
+                  Logo
+                </label>
+                <label
+                  htmlFor="logoUpload"
+                  style={{
+                    cursor: uploadLoading ? "not-allowed" : "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "6px",
+                    backgroundColor: uploadLoading 
+                      ? (isDarkMode ? "rgba(99, 102, 241, 0.3)" : "rgba(99, 102, 241, 0.1)")
+                      : (isDarkMode ? "rgba(99, 102, 241, 0.2)" : "rgba(99, 102, 241, 0.1)"),
+                    color: "#6366f1",
+                    transition: "all 0.2s",
+                    opacity: uploadLoading ? 0.6 : 1,
+                  }}
+                >
+                  {uploadLoading ? (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite" }}>
+                      <line x1="12" y1="2" x2="12" y2="6"></line>
+                      <line x1="12" y1="18" x2="12" y2="22"></line>
+                      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                      <line x1="2" y1="12" x2="6" y2="12"></line>
+                      <line x1="18" y1="12" x2="22" y2="12"></line>
+                      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                  )}
+                  <input
+                    id="logoUpload"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, "logo")}
+                    disabled={uploadLoading}
+                    style={{ display: "none" }}
+                  />
+                </label>
+              </div>
+              <input
+                type="url"
+                name="logo"
+                value={formData.logo || ""}
+                onChange={handleChange}
+                placeholder="https://example.com/image.jpg"
+                style={{
+                  backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                  border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
+                  borderRadius: "8px",
+                  padding: "15px 22px",
+                  fontSize: "15px",
+                  width: "100%",
+                  color: isDarkMode ? "#ffffff" : "#000000",
+                }}
+              />
+            </div>
+
             <div className="col-12">
               <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                 Headline

@@ -177,6 +177,21 @@ export default function HomepageContent() {
               <div className="row y-gap-20">
                 <div className="col-12">
                   <div className={`text-14 fw-500 mb-5 ${isDarkMode ? "text-gray-3" : "text-dark-3"}`}>
+                    Logo
+                  </div>
+                  {homepageData.hero?.logo && (
+                    <div className="mt-10">
+                      <img
+                        src={homepageData.hero.logo}
+                        alt="Logo"
+                        style={{ maxWidth: "100px", borderRadius: "8px" }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="col-12">
+                  <div className={`text-14 fw-500 mb-5 ${isDarkMode ? "text-gray-3" : "text-dark-3"}`}>
                     Headline
                   </div>
                   <div className={`text-16 ${isDarkMode ? "text-white" : "text-dark-1"}`}>
