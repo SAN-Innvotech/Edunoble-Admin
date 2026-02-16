@@ -257,9 +257,14 @@ export default function Content() {
                               </div>
                             )}
 
-                            <div className="text-15 lh-1 text-dark-1 -dark-text-white">
-                              <p>{content.content}</p>
-                            </div>
+                            <div 
+                              className="text-15 lh-1 text-dark-1 -dark-text-white"
+                              dangerouslySetInnerHTML={{ __html: content.content || '' }}
+                              style={{
+                                wordWrap: "break-word",
+                                overflowWrap: "break-word",
+                              }}
+                            />
                           </div>
 
                           <button
@@ -415,9 +420,14 @@ export default function Content() {
                               </div>
                             )}
 
-                            <div className="text-15 lh-1 text-dark-1 -dark-text-white">
-                              <p>{content.content}</p>
-                            </div>
+                            <div 
+                              className="text-15 lh-1 text-dark-1 -dark-text-white"
+                              dangerouslySetInnerHTML={{ __html: content.content || '' }}
+                              style={{
+                                wordWrap: "break-word",
+                                overflowWrap: "break-word",
+                              }}
+                            />
                           </div>
 
                           <button
