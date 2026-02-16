@@ -65,6 +65,12 @@ export const sidebarItems = [
     iconClass: "text-20 icon-comment",
     text: "FAQs",
   },
+  {
+    id: 25,
+    href: "/dshb-leads",
+    iconClass: "text-20 icon-person-3",
+    text: "Leads",
+  },
   // {
   //   id: 7,
   //   href: "/dshb-settings",

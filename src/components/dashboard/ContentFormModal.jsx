@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getApiUrl } from "@/config/api";
 import { useContextElement } from "@/context/Context";
 import { createPortal } from "react-dom";
 import Toast from "../common/Toast";
+import Quill from "quill";
+import "quill/dist/quill.snow.css";
 
 export default function ContentFormModal({ isOpen, onClose, content, onSuccess }) {
   const { auth } = useContextElement();
@@ -24,6 +26,8 @@ export default function ContentFormModal({ isOpen, onClose, content, onSuccess }
   const [uploadLoading, setUploadLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const quillRef = useRef(null);
+  const editorContainerRef = useRef(null);
 
   const isEditMode = !!content;
 
@@ -44,6 +48,51 @@ export default function ContentFormModal({ isOpen, onClose, content, onSuccess }
     
     return () => observer.disconnect();
   }, []);
+
+  // Initialize Quill editor when modal opens
+  useEffect(() => {
+    if (!isOpen || !editorContainerRef.current) return;
+  
+    const container = editorContainerRef.current;
+  
+    // CLEAN previous instance completely
+    container.innerHTML = "";
+    quillRef.current = null;
+  
+    // Create new instance
+    const quill = new Quill(container, {
+      theme: "snow",
+      placeholder: "Enter content text",
+    });
+  
+    quillRef.current = quill;
+  
+    // Set initial content safely
+    const initialContent = content?.content || "";
+  
+    if (initialContent) {
+      quill.clipboard.dangerouslyPasteHTML(initialContent);
+    }
+  
+    // Sync with state
+    quill.on("text-change", () => {
+      const html = quill.root.innerHTML;
+      setFormData(prev => ({
+        ...prev,
+        content: html,
+      }));
+    });
+  
+    return () => {
+      if (quillRef.current) {
+        quillRef.current.off("text-change");
+        quillRef.current = null;
+      }
+      container.innerHTML = "";
+    };
+  
+  }, [isOpen, content?._id]); // KEY CHANGE
+  
 
   // Populate form when modal opens or content changes
   useEffect(() => {
@@ -162,7 +211,17 @@ export default function ContentFormModal({ isOpen, onClose, content, onSuccess }
       if (!formData.title.trim()) {
         throw new Error("Title is required");
       }
-      if (!formData.content.trim()) {
+      
+      // Get content from Quill editor if available
+      let contentToSave = formData.content;
+      if (quillRef.current) {
+        contentToSave = quillRef.current.root.innerHTML;
+        // Check if content is empty (only contains <p><br></p> or empty)
+        const textContent = quillRef.current.getText().trim();
+        if (!textContent) {
+          throw new Error("Content is required");
+        }
+      } else if (!formData.content.trim() || formData.content === "<p><br></p>") {
         throw new Error("Content is required");
       }
 
@@ -183,7 +242,7 @@ export default function ContentFormModal({ isOpen, onClose, content, onSuccess }
       // Build request body
       const requestBody = {
         title: formData.title,
-        content: formData.content,
+        content: contentToSave,
         type: formData.type,
         order: parseInt(formData.order) || 0,
         isActive: formData.isActive,
@@ -366,33 +425,83 @@ export default function ContentFormModal({ isOpen, onClose, content, onSuccess }
                 </div>
 
                 {/* Content */}
-                <div className="col-12">
+                <div className="col-12" style={{ position: "relative", zIndex: 1, marginBottom: "50px" }}>
                   <label className={`text-16 lh-1 fw-500 mb-10 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                     Content <span className="text-red-1">*</span>
                   </label>
-                  <textarea
-                    required
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
-                    placeholder="Enter content text"
-                    rows="6"
+                  <div
+                    ref={editorContainerRef}
                     style={{
                       backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
                       border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
                       borderRadius: "8px",
-                      padding: "15px 22px",
-                      fontSize: "15px",
-                      width: "100%",
-                      resize: "vertical",
-                      fontFamily: "inherit",
-                      color: isDarkMode ? "#ffffff" : "#000000",
+                      minHeight: "200px",
+                      position: "relative",
+                      zIndex: 1,
+                      overflow: "visible",
                     }}
                   />
+                  <style>
+                    {`
+                      .ql-container {
+                        font-family: inherit;
+                        font-size: 15px;
+                        color: ${isDarkMode ? "#ffffff" : "#000000"};
+                        position: relative;
+                        z-index: 1;
+                      }
+                      .ql-editor {
+                        min-height: 200px;
+                        color: ${isDarkMode ? "#ffffff" : "#000000"};
+                      }
+                      .ql-toolbar {
+                        background-color: ${isDarkMode ? "#1a0d3a" : "#f8f9fa"};
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 8px;
+                        border-bottom: ${isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD"};
+                        position: relative;
+                        z-index: 1;
+                      }
+                      .ql-container {
+                        border-bottom-left-radius: 8px;
+                        border-bottom-right-radius: 8px;
+                        border-top: none;
+                      }
+                      .ql-stroke {
+                        stroke: ${isDarkMode ? "#ffffff" : "#000000"};
+                      }
+                      .ql-fill {
+                        fill: ${isDarkMode ? "#ffffff" : "#000000"};
+                      }
+                      .ql-picker-label {
+                        color: ${isDarkMode ? "#ffffff" : "#000000"};
+                      }
+                      .ql-snow .ql-picker.ql-expanded .ql-picker-label {
+                        color: ${isDarkMode ? "#ffffff" : "#000000"};
+                      }
+                      .ql-snow .ql-picker-options {
+                        background-color: ${isDarkMode ? "#2B1C55" : "#ffffff"};
+                        border: ${isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD"};
+                        z-index: 1000 !important;
+                        position: absolute !important;
+                        max-height: 200px !important;
+                        overflow-y: auto !important;
+                      }
+                      .ql-snow .ql-picker-item {
+                        color: ${isDarkMode ? "#ffffff" : "#000000"};
+                      }
+                      .ql-snow .ql-picker-item:hover {
+                        background-color: ${isDarkMode ? "rgba(255, 255, 255, 0.1)" : "#f0f0f0"};
+                      }
+                      .ql-tooltip {
+                        z-index: 1001 !important;
+                      }
+                    `}
+                  </style>
                 </div>
 
                 {/* Picture URL */}
-                <div className="col-12">
+                <div className="col-12" style={{ position: "relative", zIndex: 2 }}>
                   <div className="d-flex items-center justify-between mb-10">
                     <label className={`text-16 lh-1 fw-500 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
                       Picture URL (Optional)

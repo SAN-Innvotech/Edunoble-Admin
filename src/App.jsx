@@ -63,6 +63,7 @@ import DshbMessagesPage from "./pages/dashboard/dshb-messages";
 import DshbPartcipentPage from "./pages/dashboard/dshb-participants";
 import DshbQuizPage from "./pages/dashboard/dshb-quiz";
 import DshbServeyPage from "./pages/dashboard/dshb-survey";
+import DshbLeadsPage from "./pages/dashboard/dshb-leads";
 import EventListPage1 from "./pages/events/event-list-1";
 import EventSingPage from "./pages/events/events";
 import EventCartPage from "./pages/cartPages/event-cart";
@@ -234,6 +235,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <DshbHomepageContentPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="dshb-leads"
+                element={
+                  <ProtectedRoute>
+                    <DshbLeadsPage />
                   </ProtectedRoute>
                 }
               />
