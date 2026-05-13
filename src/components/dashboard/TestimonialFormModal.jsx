@@ -17,13 +17,17 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
     authorName: "",
     authorClass: "",
     authorDetails: "",
+    photoUrl: "",
+    rating: null,
     order: 0,
     isActive: true,
   });
 
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [hoverRating, setHoverRating] = useState(0);
 
   const isEditMode = !!testimonial;
 
@@ -32,16 +36,16 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
     const checkDarkMode = () => {
       setIsDarkMode(document.documentElement.classList.contains("-dark-mode"));
     };
-    
+
     checkDarkMode();
-    
+
     // Watch for dark mode changes
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
-    
+
     return () => observer.disconnect();
   }, []);
 
@@ -56,6 +60,11 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
           authorName: testimonial.authorName || "",
           authorClass: testimonial.authorClass || "",
           authorDetails: testimonial.authorDetails || "",
+          photoUrl: testimonial.photoUrl || "",
+          rating:
+            typeof testimonial.rating === "number" && testimonial.rating >= 1 && testimonial.rating <= 5
+              ? testimonial.rating
+              : null,
           order: testimonial.order || 0,
           isActive: testimonial.isActive !== undefined ? testimonial.isActive : true,
         });
@@ -67,11 +76,14 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
           authorName: "",
           authorClass: "",
           authorDetails: "",
+          photoUrl: "",
+          rating: null,
           order: 0,
           isActive: true,
         });
       }
       setError(null);
+      setHoverRating(0);
       // Clear toast when modal opens
       setToast({ isVisible: false, message: "", type: "success" });
     }
@@ -83,6 +95,94 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
       ...prev,
       [name]: type === "checkbox" ? checked : name === "order" ? parseInt(value) || 0 : value,
     }));
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      setToast({
+        isVisible: true,
+        message: "Please select a valid image file",
+        type: "error",
+      });
+      e.target.value = "";
+      return;
+    }
+
+    // 5 MB max client-side check
+    const MAX_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      setToast({
+        isVisible: true,
+        message: "Image must be 5 MB or smaller",
+        type: "error",
+      });
+      e.target.value = "";
+      return;
+    }
+
+    setUploadLoading(true);
+    setError(null);
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append("image", file);
+
+      const headers = {};
+      if (auth && auth.token) {
+        headers["Authorization"] = `Bearer ${auth.token}`;
+      }
+
+      const response = await fetch(getApiUrl("upload/image"), {
+        method: "POST",
+        headers,
+        body: uploadData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.isSuccess) {
+        throw new Error(result.message || "Failed to upload image");
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        photoUrl: result.data?.imageUrl || "",
+      }));
+
+      setToast({
+        isVisible: true,
+        message: "Photo uploaded successfully",
+        type: "success",
+      });
+    } catch (err) {
+      const errorMessage = err.message || "An error occurred while uploading the photo";
+      setError(errorMessage);
+      setToast({
+        isVisible: true,
+        message: errorMessage,
+        type: "error",
+      });
+    } finally {
+      setUploadLoading(false);
+      // Reset file input
+      e.target.value = "";
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setFormData((prev) => ({ ...prev, photoUrl: "" }));
+  };
+
+  const handleRatingSelect = (value) => {
+    setFormData((prev) => ({ ...prev, rating: value }));
+  };
+
+  const handleClearRating = () => {
+    setFormData((prev) => ({ ...prev, rating: null }));
   };
 
   const handleSubmit = async (e) => {
@@ -126,6 +226,11 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
           authorName: formData.authorName,
           authorClass: formData.authorClass,
           authorDetails: formData.authorDetails,
+          photoUrl: formData.photoUrl ? formData.photoUrl.trim() : "",
+          rating:
+            typeof formData.rating === "number" && formData.rating >= 1 && formData.rating <= 5
+              ? formData.rating
+              : null,
           order: parseInt(formData.order) || 0,
           ...(isEditMode && { isActive: formData.isActive }),
         }),
@@ -178,6 +283,8 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const displayRating = hoverRating || formData.rating || 0;
 
   return (
     <>
@@ -247,6 +354,10 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
               <form onSubmit={handleSubmit} className="contact-form row y-gap-30">
                 <style>
                   {`
+                    @keyframes spin {
+                      from { transform: rotate(0deg); }
+                      to { transform: rotate(360deg); }
+                    }
                     .testimonial-form-modal-container input::placeholder,
                     .testimonial-form-modal-container textarea::placeholder {
                       color: ${isDarkMode ? "rgba(255, 255, 255, 0.5)" : "#999"} !important;
@@ -403,6 +514,252 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
                   />
                 </div>
 
+                {/* Photo Upload */}
+                <div className="col-12">
+                  <div className="d-flex items-center justify-between mb-10">
+                    <label className={`text-16 lh-1 fw-500 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
+                      Photo (Optional)
+                    </label>
+                    <label
+                      htmlFor="testimonialPhotoUpload"
+                      style={{
+                        cursor: uploadLoading ? "not-allowed" : "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "6px",
+                        backgroundColor: uploadLoading
+                          ? (isDarkMode ? "rgba(99, 102, 241, 0.3)" : "rgba(99, 102, 241, 0.1)")
+                          : (isDarkMode ? "rgba(99, 102, 241, 0.2)" : "rgba(99, 102, 241, 0.1)"),
+                        color: "#6366f1",
+                        transition: "all 0.2s",
+                        opacity: uploadLoading ? 0.6 : 1,
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!uploadLoading) {
+                          e.currentTarget.style.backgroundColor = isDarkMode
+                            ? "rgba(99, 102, 241, 0.3)"
+                            : "rgba(99, 102, 241, 0.2)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!uploadLoading) {
+                          e.currentTarget.style.backgroundColor = isDarkMode
+                            ? "rgba(99, 102, 241, 0.2)"
+                            : "rgba(99, 102, 241, 0.1)";
+                        }
+                      }}
+                      title="Upload photo (max 5 MB)"
+                    >
+                      {uploadLoading ? (
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ animation: "spin 1s linear infinite" }}
+                        >
+                          <line x1="12" y1="2" x2="12" y2="6"></line>
+                          <line x1="12" y1="18" x2="12" y2="22"></line>
+                          <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                          <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                          <line x1="2" y1="12" x2="6" y2="12"></line>
+                          <line x1="18" y1="12" x2="22" y2="12"></line>
+                          <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                          <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                        </svg>
+                      ) : (
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                          <polyline points="17 8 12 3 7 8"></polyline>
+                          <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                      )}
+                      <input
+                        id="testimonialPhotoUpload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        disabled={uploadLoading}
+                        style={{ display: "none" }}
+                      />
+                    </label>
+                  </div>
+                  <div className="d-flex items-center" style={{ gap: "12px" }}>
+                    {formData.photoUrl ? (
+                      <div style={{ position: "relative", width: "60px", height: "60px", flexShrink: 0 }}>
+                        <img
+                          src={formData.photoUrl}
+                          alt="Author"
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.15)" : "1px solid #DDDDDD",
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={handleRemovePhoto}
+                          title="Remove photo"
+                          style={{
+                            position: "absolute",
+                            top: "-6px",
+                            right: "-6px",
+                            width: "22px",
+                            height: "22px",
+                            borderRadius: "50%",
+                            background: "#ef4444",
+                            color: "#ffffff",
+                            border: "2px solid " + (isDarkMode ? "#140342" : "#ffffff"),
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            cursor: "pointer",
+                            fontSize: "14px",
+                            lineHeight: "1",
+                            padding: 0,
+                          }}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    ) : (
+                      <div
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          borderRadius: "50%",
+                          flexShrink: 0,
+                          backgroundColor: isDarkMode ? "#2B1C55" : "#f3f4f6",
+                          border: isDarkMode ? "1px dashed rgba(255, 255, 255, 0.2)" : "1px dashed #DDDDDD",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.4)" : "#9ca3af",
+                        }}
+                      >
+                        <svg
+                          width="22"
+                          height="22"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <circle cx="12" cy="8" r="4"></circle>
+                          <path d="M4 21c0-4 4-7 8-7s8 3 8 7"></path>
+                        </svg>
+                      </div>
+                    )}
+                    <input
+                      type="url"
+                      name="photoUrl"
+                      value={formData.photoUrl}
+                      onChange={handleChange}
+                      placeholder="https://example.com/photo.jpg or use the upload icon above"
+                      style={{
+                        backgroundColor: isDarkMode ? "#2B1C55" : "#ffffff",
+                        border: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid #DDDDDD",
+                        borderRadius: "8px",
+                        padding: "15px 22px",
+                        fontSize: "15px",
+                        flex: 1,
+                        color: isDarkMode ? "#ffffff" : "#000000",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Rating */}
+                <div className="col-12">
+                  <div className="d-flex items-center justify-between mb-10">
+                    <label className={`text-16 lh-1 fw-500 d-block ${isDarkMode ? "text-white" : "text-dark-1"}`}>
+                      Rating (Optional)
+                    </label>
+                    {formData.rating !== null && (
+                      <button
+                        type="button"
+                        onClick={handleClearRating}
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          color: "#6366f1",
+                          fontSize: "13px",
+                          cursor: "pointer",
+                          padding: 0,
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Clear
+                      </button>
+                    )}
+                  </div>
+                  <div
+                    className="d-flex items-center"
+                    style={{ gap: "6px" }}
+                    onMouseLeave={() => setHoverRating(0)}
+                  >
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const filled = star <= displayRating;
+                      return (
+                        <span
+                          key={star}
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleRatingSelect(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleRatingSelect(star);
+                            }
+                          }}
+                          aria-label={`${star} star${star > 1 ? "s" : ""}`}
+                          style={{
+                            cursor: "pointer",
+                            fontSize: "32px",
+                            lineHeight: "1",
+                            color: filled ? "#FFC107" : (isDarkMode ? "rgba(255, 255, 255, 0.25)" : "#d1d5db"),
+                            transition: "color 0.15s, transform 0.15s",
+                            userSelect: "none",
+                            transform: hoverRating === star ? "scale(1.15)" : "scale(1)",
+                          }}
+                        >
+                          ★
+                        </span>
+                      );
+                    })}
+                    <span
+                      style={{
+                        marginLeft: "10px",
+                        fontSize: "14px",
+                        color: isDarkMode ? "rgba(255, 255, 255, 0.6)" : "#6b7280",
+                      }}
+                    >
+                      {formData.rating !== null ? `${formData.rating} / 5` : "Not rated"}
+                    </span>
+                  </div>
+                </div>
+
                 {/* Is Active - Only in Edit Mode */}
                 {isEditMode && (
                   <div className="col-12">
@@ -483,4 +840,3 @@ export default function TestimonialFormModal({ isOpen, onClose, testimonial, onS
     </>
   );
 }
-
