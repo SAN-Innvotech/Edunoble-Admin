@@ -64,6 +64,9 @@ import DshbPartcipentPage from "./pages/dashboard/dshb-participants";
 import DshbQuizPage from "./pages/dashboard/dshb-quiz";
 import DshbServeyPage from "./pages/dashboard/dshb-survey";
 import DshbLeadsPage from "./pages/dashboard/dshb-leads";
+import DshbBlogsPage from "./pages/dashboard/dshb-blogs";
+import DshbCoursesCmsPage from "./pages/dashboard/dshb-courses-cms";
+import DshbToppersPage from "./pages/dashboard/dshb-toppers";
 import EventListPage1 from "./pages/events/event-list-1";
 import EventSingPage from "./pages/events/events";
 import EventCartPage from "./pages/cartPages/event-cart";
@@ -243,6 +246,30 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <DshbLeadsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="dshb-blogs"
+                element={
+                  <ProtectedRoute>
+                    <DshbBlogsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="dshb-courses"
+                element={
+                  <ProtectedRoute>
+                    <DshbCoursesCmsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="dshb-toppers"
+                element={
+                  <ProtectedRoute>
+                    <DshbToppersPage />
                   </ProtectedRoute>
                 }
               />
