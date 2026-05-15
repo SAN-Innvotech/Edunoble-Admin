@@ -66,6 +66,24 @@ export const sidebarItems = [
     text: "FAQs",
   },
   {
+    id: 26,
+    href: "/dshb-blogs",
+    iconClass: "text-20 icon-document",
+    text: "Blogs",
+  },
+  {
+    id: 27,
+    href: "/dshb-courses",
+    iconClass: "text-20 icon-online-learning",
+    text: "Courses",
+  },
+  {
+    id: 28,
+    href: "/dshb-toppers",
+    iconClass: "text-20 icon-badge",
+    text: "Toppers",
+  },
+  {
     id: 25,
     href: "/dshb-leads",
     iconClass: "text-20 icon-person-3",
